@@ -1,0 +1,148 @@
+.container {
+  width: 792px;
+  height: 422px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 24px;
+  margin: 0 auto;
+  margin-top: 24px;
+}
+
+.image {
+  width: 374px;
+  height: 374px;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.title {
+  color: rgb(23, 32, 41);
+  font-weight: 700;
+  font-size: 28px;
+  letter-spacing: 0px;
+  text-align: left;
+  margin-left: 16px;
+  margin-bottom: 4px;
+  margin-top: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 346px;
+}
+
+.rating {
+  font-size: 16px;
+  margin-bottom: 10px;
+  margin-left: 16px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.price {
+  color: rgb(23, 32, 41);
+  font-weight: 800;
+  font-size: 28px;
+  margin-left: 16px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+.information {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: baseline;
+}
+.button {
+  border-radius: 12px;
+  background: rgb(0, 115, 230);
+  width: 346px;
+  height: 52px;
+  border: 0;
+
+  color: rgb(255, 255, 255);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0px;
+  text-align: center;
+  cursor: pointer;
+}
+.button:hover {
+  background: #338feb;
+}
+.containerUndo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+  height: 20px;
+  margin-bottom: 8px;
+}
+.undo {
+  width: 20px;
+  height: 20px;
+}
+.textUndo {
+  color: rgb(23, 32, 41);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0px;
+  text-align: left;
+  margin-left: 8px;
+}
+.titleUndo {
+  color: rgb(23, 32, 41);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0px;
+  text-align: left;
+  margin-bottom: 16px;
+  width: 346px;
+}
+.subtitleUndo {
+  color: rgb(128, 128, 128);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0px;
+  text-align: left;
+  width: 346px;
+}
+.description {
+  margin: 0 auto;
+  border-radius: 16px;
+  width: 792px;
+  margin-top: 24px;
+  background: rgb(255, 255, 255);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 24px;
+}
+.titleDescription {
+  color: rgb(23, 32, 41);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0px;
+  text-align: left;
+  margin-bottom: 16px;
+}
+.subtitleDescription {
+  color: rgb(23, 32, 41);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0px;
+  text-align: left;
+  max-width: 744px;
+}
+.subtitleDescription a {
+  pointer-events: none;
+  color: rgb(23, 32, 41);
+}

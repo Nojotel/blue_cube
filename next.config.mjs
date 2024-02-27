@@ -6,9 +6,10 @@ const nextConfig = {
     return [
       {
         source: "/products/:id",
-        destination: "/product/:id",
+        destination: "/products/:id",
       },
     ];
   },
 };
+
 export default nextConfig;

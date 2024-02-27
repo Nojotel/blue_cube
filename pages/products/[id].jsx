@@ -1,27 +1,15 @@
-import axios from "axios";
-import { useRouter } from "next/router";
+import React from "react";
+import { Provider } from "react-redux";
+import store from "@/redux/store";
+import RootLayout from "@/app/layout";
+import ProductDetails from "@/components/ProductDetails/ProductDetails";
 
-const ProductPage = ({ product }) => {
-  return (
-    <div>
-      <h1>{product.title}</h1>
-      <p>ID: {product.id}</p>
-      <p>{product.description}</p>
-      <p>{product.price} ₽</p>
-      <p>Рейтинг: {product.rating}</p>
-    </div>
-  );
-};
+const WrappedProductDetails = () => (
+  <Provider store={store}>
+    <RootLayout>
+      <ProductDetails />
+    </RootLayout>
+  </Provider>
+);
 
-export async function getServerSideProps(context) {
-  const { id } = context.query;
-  const response = await axios.get(`https://skillfactory-task.detmir.team/products/${id}`);
-  const product = response.data;
-  return {
-    props: {
-      product,
-    },
-  };
-}
-
-export default ProductPage;
+export default WrappedProductDetails;
