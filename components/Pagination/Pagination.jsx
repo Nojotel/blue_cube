@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Pagination.module.css";
 import Image from "next/image";
 import left from "@/public/Left.svg";
@@ -11,8 +11,23 @@ import rightActive from "@/public/RightActive.svg";
 const Pagination = ({ setPage, page }) => {
   const [isLeftClicked, setIsLeftClicked] = useState(false);
   const [isRightClicked, setIsRightClicked] = useState(false);
+  const [visiblePages, setVisiblePages] = useState(5);
   const totalPages = 10;
-  const visiblePages = 5;
+
+  useEffect(() => {
+    const updateVisiblePages = () => {
+      if (window.innerWidth < 530) {
+        setVisiblePages(1);
+      } else {
+        setVisiblePages(5);
+      }
+    };
+
+    window.addEventListener("resize", updateVisiblePages);
+    updateVisiblePages();
+
+    return () => window.removeEventListener("resize", updateVisiblePages);
+  }, []);
 
   let startPage = page - Math.floor(visiblePages / 2);
   startPage = Math.max(startPage, 1);

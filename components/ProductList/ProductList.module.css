@@ -2,8 +2,13 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   max-width: 1350px;
   margin: 0 auto;
   padding-top: 50px;
+}
+@media (max-width: 530px) {
+  .container {
+    padding-top: 20px;
+  }
 }

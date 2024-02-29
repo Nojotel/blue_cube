@@ -29,3 +29,16 @@
     transform: rotate(360deg);
   }
 }
+@media (max-width: 530px) {
+  .text {
+    margin-bottom: 20px;
+    font-size: 30px;
+  }
+}
+@media (max-width: 530px) {
+  .text {
+    margin-bottom: 20px;
+    font-size: 25px;
+    margin-bottom: 20px;
+  }
+}

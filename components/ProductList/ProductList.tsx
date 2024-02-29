@@ -6,17 +6,37 @@ import Pagination from "@/components/Pagination/Pagination";
 import styles from "./ProductList.module.css";
 
 const ProductList = () => {
-  const [page, setPage] = useState(() => Number(localStorage.getItem("page")) || 1);
+  const [page, setPage] = useState(() => {
+    if (typeof window !== "undefined") {
+      return Number(localStorage.getItem("page")) || 1;
+    }
+    return 1;
+  });
 
   useEffect(() => {
-    window.scrollTo(0, Number(localStorage.getItem("scrollPosition")) || 0);
+    if (typeof window !== "undefined") {
+      const scrollPosition = Number(localStorage.getItem("scrollPosition")) || 0;
+      const handleScroll = () => {
+        window.scrollTo({ top: scrollPosition, behavior: "smooth" });
+      };
+      const timer = setTimeout(handleScroll, 200);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("page", page.toString());
-    const saveScrollPosition = () => localStorage.setItem("scrollPosition", window.pageYOffset.toString());
-    window.addEventListener("scroll", saveScrollPosition);
-    return () => window.removeEventListener("scroll", saveScrollPosition);
+    if (typeof window !== "undefined") {
+      const saveScrollPosition = () => localStorage.setItem("scrollPosition", window.pageYOffset.toString());
+      window.addEventListener("scroll", saveScrollPosition);
+      return () => window.removeEventListener("scroll", saveScrollPosition);
+    }
+  }, [page]);
+
+  useEffect(() => {
+    const scrollToTop = () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    scrollToTop();
   }, [page]);
 
   return (
