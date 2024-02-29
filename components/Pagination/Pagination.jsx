@@ -13,8 +13,13 @@ const Pagination = ({ setPage, page }) => {
   const [isRightClicked, setIsRightClicked] = useState(false);
   const totalPages = 10;
   const visiblePages = 5;
-  const startPage = Math.max(1, Math.min(page, totalPages - visiblePages + 1));
-  const endPage = Math.min(totalPages, startPage + visiblePages - 1);
+
+  let startPage = page - Math.floor(visiblePages / 2);
+  startPage = Math.max(startPage, 1);
+  startPage = Math.min(startPage, totalPages - visiblePages + 1);
+
+  let endPage = startPage + visiblePages - 1;
+  endPage = Math.min(endPage, totalPages);
 
   const handleClick = (newPage, direction) => {
     setPage(newPage);
