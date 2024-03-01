@@ -1,3 +1,4 @@
+"use client";
 import React, { FC, useState, useEffect, MouseEvent } from "react";
 import Image from "next/image";
 import styles from "./Header.module.css";
