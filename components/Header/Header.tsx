@@ -63,7 +63,7 @@ const Header: FC = () => {
   return (
     <header className={styles.container}>
       <nav className={styles.navigation}>
-        <Image className={styles.logo} src={logoSrc} alt="Logo" width={150} height={24} />
+        <Image className={styles.logo} src={logoSrc} alt="Logo" width={150} height={24} priority />
         <ul className={styles.links}>
           <li className={pathname === "/" ? styles.active : styles.linksItems}>
             <Link href="/">Товары</Link>
