@@ -7,30 +7,60 @@ import basket from "@/public/basket.svg";
 import basketHover from "@/public/basketHover.svg";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Up from "@/public/Arrow Up.svg";
 
 const Header = () => {
   const [logoSrc, setLogoSrc] = useState(logo);
   const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const isBasketPage = pathname === "/basket";
 
   useEffect(() => {
     const getIsMobile = () => window.innerWidth < 530;
+    const getIsMedium = () => window.innerWidth < 1050;
     setIsMobile(getIsMobile());
+    setShowBackToTop(getIsMedium());
     setLogoSrc(getIsMobile() ? logoMob : logo);
+
     window.addEventListener("resize", () => {
       const isMobile = getIsMobile();
+      const isMedium = getIsMedium();
       setIsMobile(isMobile);
+      setShowBackToTop(isMedium);
       setLogoSrc(isMobile ? logoMob : logo);
     });
-    return () =>
+
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
       window.removeEventListener("resize", () => {
         const isMobile = getIsMobile();
+        const isMedium = getIsMedium();
         setIsMobile(isMobile);
+        setShowBackToTop(isMedium);
         setLogoSrc(isMobile ? logoMob : logo);
       });
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <header className={styles.container}>
@@ -50,6 +80,11 @@ const Header = () => {
             {!isMobile && <span className={styles.basketText}>Корзина</span>}(0)
           </div>
         </Link>
+        {showBackToTop && (
+          <button onClick={scrollToTop} className={`${styles.backToTop} ${isScrolled ? styles.scrolled : ""}`}>
+            <Image src={Up} alt="Logo" width={24} height={24} />
+          </button>
+        )}
       </nav>
     </header>
   );
