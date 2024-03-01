@@ -7,7 +7,7 @@ export interface Product {
   title: string;
   rating: number;
   price: number;
-  description: string; // Add this line if products are supposed to have a description
+  description: string;
 }
 
 interface ProductState {
