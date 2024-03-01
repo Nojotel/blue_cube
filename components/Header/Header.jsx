@@ -77,9 +77,11 @@ const Header = () => {
         <Link href="/basket">
           <div className={`${styles.basketContainer} ${isHovered || isBasketPage ? styles.hovered : ""}`} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <Image className={styles.basket} src={isHovered || isBasketPage ? basketHover : basket} alt="Корзина" width={20} height={20} />
-            {!isMobile && <span className={styles.basketText}>Корзина</span>}(0)
+            {!isMobile && <span className={styles.basketText}>Корзина</span>}
+            <span style={{ color: "rgb(23, 32, 41)" }}>(0)</span>
           </div>
         </Link>
+
         {showBackToTop && (
           <button onClick={scrollToTop} className={`${styles.backToTop} ${isScrolled ? styles.scrolled : ""}`}>
             <Image src={Up} alt="Logo" width={24} height={24} />
