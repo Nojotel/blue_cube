@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { FC, useState, useEffect, MouseEvent } from "react";
 import Image from "next/image";
 import styles from "./Header.module.css";
 import logo from "@/public/logo.svg";
@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Up from "@/public/Arrow Up.svg";
 
-const Header = () => {
+const Header: FC = () => {
   const [logoSrc, setLogoSrc] = useState(logo);
   const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -21,17 +21,19 @@ const Header = () => {
   useEffect(() => {
     const getIsMobile = () => window.innerWidth < 530;
     const getIsMedium = () => window.innerWidth < 1050;
+
     setIsMobile(getIsMobile());
     setShowBackToTop(getIsMedium());
     setLogoSrc(getIsMobile() ? logoMob : logo);
 
-    window.addEventListener("resize", () => {
+    const handleResize = () => {
       const isMobile = getIsMobile();
       const isMedium = getIsMedium();
+
       setIsMobile(isMobile);
       setShowBackToTop(isMedium);
       setLogoSrc(isMobile ? logoMob : logo);
-    });
+    };
 
     const handleScroll = () => {
       if (window.scrollY > 100) {
@@ -41,21 +43,17 @@ const Header = () => {
       }
     };
 
+    window.addEventListener("resize", handleResize);
     window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener("resize", () => {
-        const isMobile = getIsMobile();
-        const isMedium = getIsMedium();
-        setIsMobile(isMobile);
-        setShowBackToTop(isMedium);
-        setLogoSrc(isMobile ? logoMob : logo);
-      });
+      window.removeEventListener("resize", handleResize);
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-  const scrollToTop = () => {
+  const scrollToTop = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -81,7 +79,6 @@ const Header = () => {
             <span style={{ color: "rgb(23, 32, 41)" }}>(0)</span>
           </div>
         </Link>
-
         {showBackToTop && (
           <button onClick={scrollToTop} className={`${styles.backToTop} ${isScrolled ? styles.scrolled : ""}`}>
             <Image src={Up} alt="Logo" width={24} height={24} />

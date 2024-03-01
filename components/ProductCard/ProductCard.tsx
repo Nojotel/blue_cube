@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,13 +5,19 @@ import Image from "next/image";
 import styles from "./ProductCard.module.css";
 import { fetchProducts } from "@/redux/productReducer";
 import Loading from "@/app/loading";
-import { generateStars } from "./generateStars";
+import { GenerateStars } from "./generateStars";
+import { AppDispatch, RootState } from "@/redux/store";
 
-const selectProducts = (state) => state.product.products;
-const selectStatus = (state) => state.product.status;
+interface ProductCardProps {
+  setPage: (page: number) => void;
+  page: number;
+}
 
-const ProductCard = ({ setPage, page }) => {
-  const dispatch = useDispatch();
+const selectProducts = (state: RootState) => state.product.products;
+const selectStatus = (state: RootState) => state.product.status;
+
+const ProductCard: React.FC<ProductCardProps> = ({ setPage, page }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const products = useSelector(selectProducts);
   const status = useSelector(selectStatus);
 
@@ -27,12 +31,14 @@ const ProductCard = ({ setPage, page }) => {
 
   return (
     <div className={styles.grid}>
-      {products.map((product) => (
+      {products.map((product: any) => (
         <Link key={product.id} href={`/products/${product.id}`}>
           <div className={styles.container}>
             <Image className={styles.image} src={product.picture} alt={product.title} width={240} height={240} priority />
             <h2 className={styles.title}>{product.title}</h2>
-            <p className={styles.rating}>{generateStars(product.rating)}</p>
+            <p className={styles.rating}>
+              <GenerateStars rating={product.rating} />
+            </p>
             <p className={styles.price}>{product.price} ₽</p>
           </div>
         </Link>

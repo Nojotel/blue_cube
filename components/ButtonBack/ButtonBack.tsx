@@ -1,14 +1,14 @@
-"use client";
-
-import React from "react";
+import React, { FC, MouseEvent } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import styles from "./ButtonBack.module.css";
 import left from "@/public/Left.svg";
 
-const ButtonBack = () => {
+const ButtonBack: FC = () => {
   const router = useRouter();
-  const handleClick = () => {
+
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     router.back();
   };
 

@@ -1,15 +1,20 @@
+import React, { FC } from "react";
 import Image from "next/image";
 import star from "@/public/star.svg";
 import starHalf from "@/public/StarHalf.svg";
 import starNone from "@/public/starNone.svg";
 
-export const generateStars = (rating) => {
+interface GenerateStarsProps {
+  rating: number;
+}
+
+export const GenerateStars: FC<GenerateStarsProps> = ({ rating }) => {
   let fullStars, halfStar, emptyStars;
-  if (rating >= 4.6) {
+  if (rating >= 4.8) {
     fullStars = 5;
     halfStar = false;
     emptyStars = 0;
-  } else if (rating >= 4.2) {
+  } else if (rating >= 4.3) {
     fullStars = 4;
     halfStar = true;
     emptyStars = 0;

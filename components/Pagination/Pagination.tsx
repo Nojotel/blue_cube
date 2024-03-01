@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
+import React, { FC, useState, useEffect, MouseEvent } from "react";
 import styles from "./Pagination.module.css";
 import Image from "next/image";
 import left from "@/public/Left.svg";
@@ -8,7 +6,12 @@ import right from "@/public/Right.svg";
 import leftActive from "@/public/LeftActive.svg";
 import rightActive from "@/public/RightActive.svg";
 
-const Pagination = ({ setPage, page }) => {
+interface PaginationProps {
+  setPage: (page: number) => void;
+  page: number;
+}
+
+const Pagination: FC<PaginationProps> = ({ setPage, page }) => {
   const [isLeftClicked, setIsLeftClicked] = useState(false);
   const [isRightClicked, setIsRightClicked] = useState(false);
   const [visiblePages, setVisiblePages] = useState(5);
@@ -36,7 +39,7 @@ const Pagination = ({ setPage, page }) => {
   let endPage = startPage + visiblePages - 1;
   endPage = Math.min(endPage, totalPages);
 
-  const handleClick = (newPage, direction) => {
+  const handleClick = (newPage: number, direction: string) => {
     setPage(newPage);
     if (direction === "left") {
       setIsLeftClicked(true);

@@ -1,13 +1,11 @@
 .container {
   padding: 0 2%;
 }
-
 .navigation {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
 .logo {
   width: 150px;
   height: 24px;
@@ -26,9 +24,8 @@
   transition: top 0.5s ease;
 }
 .scrolled {
-  top: 2%; /* при прокрутке более 100px элемент поднимается */
+  top: 2%;
 }
-
 .links {
   display: flex;
   align-items: center;
@@ -37,12 +34,10 @@
   margin-left: -40px;
   margin: 0 auto;
 }
-
 .links li {
   list-style-type: none;
   margin: 0 10px;
 }
-
 .links a {
   text-decoration: none;
   color: rgb(23, 32, 41);
@@ -52,18 +47,15 @@
   letter-spacing: 0px;
   text-align: center;
 }
-
 .links li.active a {
   color: rgb(0, 115, 230);
 }
-
 .basketContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
 }
-
 .basketContainer::after {
   content: "";
   position: absolute;
@@ -77,17 +69,14 @@
   transform-origin: left;
   transition: transform 0.4s ease;
 }
-
 .basketContainer.hovered::after {
   transform: scaleX(1);
 }
-
 .basket {
   width: 20px;
   height: 20px;
   margin-right: 5px;
 }
-
 .basketText {
   color: rgb(23, 32, 41);
   font-size: 16px;
@@ -102,7 +91,6 @@
 .links a {
   position: relative;
 }
-
 .links a::after {
   content: "";
   position: absolute;
