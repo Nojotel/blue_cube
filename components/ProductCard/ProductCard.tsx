@@ -7,7 +7,7 @@ import { fetchProducts } from "@/redux/productReducer";
 import Loading from "@/app/loading";
 import { GenerateStars } from "./generateStars";
 import { AppDispatch, RootState } from "@/redux/store";
-//
+
 interface ProductCardProps {
   setPage: (page: number) => void;
   page: number;
