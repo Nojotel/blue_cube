@@ -3,18 +3,18 @@ import styles from "./Basket.module.css";
 
 interface BasketProps {
   isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onToggle: (value: boolean) => void;
   children: React.ReactNode;
 }
 
-const Basket: React.FC<BasketProps> = ({ isOpen, setIsOpen, children }) => {
+const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
   const basketItems = [
     { id: "1", title: "Product 1", quantity: 2 },
     { id: "2", title: "Product 2", quantity: 1 },
   ];
 
   return (
-    <div onClick={() => setIsOpen(!isOpen)}>
+    <div onClick={() => onToggle(!isOpen)}>
       {children}
       {isOpen && (
         <div className={styles.container}>

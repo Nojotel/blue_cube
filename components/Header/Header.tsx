@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, MouseEvent } from "react";
+import React, { FC, useState, useEffect, MouseEvent, useCallback } from "react";
 import Image from "next/image";
 import styles from "./Header.module.css";
 import logo from "@/public/logo.svg";
@@ -9,16 +9,18 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Up from "@/public/Arrow Up.svg";
 import Basket from "@/components/Basket/Basket";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "@/redux/store";
+import { setBasketOpen } from "@/redux/basketSlice";
 
 const Header: FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const [logoSrc, setLogoSrc] = useState(logo);
   const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const isOpen = useSelector((state: RootState) => state.basketVisibility.isOpen);
   const pathname = usePathname();
   const isBasketPage = pathname === "/basket";
   const basketCount = useSelector((state: RootState) => state.basket.count);
@@ -50,13 +52,22 @@ const Header: FC = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const scrollToTop = (event: MouseEvent<HTMLButtonElement>) => {
+
+  const handleBasketToggle = useCallback(
+    (value: boolean) => {
+      dispatch(setBasketOpen(value));
+    },
+    [dispatch]
+  );
+
+  const scrollToTop = useCallback((event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
-  };
+  }, []);
+
   return (
     <header className={styles.container}>
       <nav className={styles.navigation}>
@@ -69,8 +80,8 @@ const Header: FC = () => {
             <Link href="/orders">Заказы</Link>
           </li>
         </ul>
-        <Basket isOpen={isOpen} setIsOpen={setIsOpen}>
-          <div className={`${styles.basketContainer} ${isOpen || isBasketPage ? styles.hovered : ""} ${isOpen ? styles.opened : ""}`} onClick={() => setIsOpen(!isOpen)} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+        <Basket isOpen={isOpen} onToggle={handleBasketToggle}>
+          <div className={`${styles.basketContainer} ${isOpen || isBasketPage ? styles.hovered : ""} ${isOpen ? styles.opened : ""}`} onClick={() => handleBasketToggle(!isOpen)} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <Image className={styles.basket} src={isHovered || isOpen ? basketHover : basket} alt="Корзина" width={20} height={20} />
             {!isMobile && <span className={styles.basketText}>Корзина</span>}
             <span style={{ color: "rgb(23, 32, 41)" }}>({basketCount})</span>
@@ -85,4 +96,5 @@ const Header: FC = () => {
     </header>
   );
 };
+
 export default Header;

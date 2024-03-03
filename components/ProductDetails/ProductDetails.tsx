@@ -15,6 +15,7 @@ import MinusWhite from "@/public/MinusWhite.svg";
 import PlusWhite from "@/public/PlusWhite.svg";
 import { AppDispatch, RootState } from "@/redux/store";
 import { Product } from "@/redux/productReducer";
+import { setBasketOpen } from "@/redux/basketSlice";
 
 const ProductDetails: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -27,7 +28,6 @@ const ProductDetails: React.FC = () => {
   const [isMinusClicked, setIsMinusClicked] = useState(false);
   const [isPlusClicked, setIsPlusClicked] = useState(false);
   const basketCount = useSelector((state: RootState) => state.basket.count);
-  const [isBasketOpen, setIsBasketOpen] = useState(false);
 
   const handleAddToCartClick = () => {
     setShowQuantityButtons(true);
@@ -49,6 +49,7 @@ const ProductDetails: React.FC = () => {
     dispatch(addToBasket(1));
   };
   const handlePlaceOrderClick = () => {
+    dispatch(setBasketOpen(true));
     setShowQuantityButtons(false);
     setQuantity(0);
   };
