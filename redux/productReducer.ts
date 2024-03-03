@@ -5,9 +5,9 @@ export interface Product {
   id: string;
   picture: string;
   title: string;
-  rating: number;
-  price: number;
   description: string;
+  price: number;
+  rating: number;
 }
 
 interface ProductState {

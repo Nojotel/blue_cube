@@ -6,6 +6,7 @@ import undo from "@/public/Undo.svg";
 import Loading from "@/app/loading";
 import NotFound from "@/app/loading";
 import { fetchProductDetails } from "@/redux/productDetailsReducer";
+import { addToBasket } from "@/redux/basketReducer";
 import { GenerateStars } from "@/components/ProductCard/generateStars";
 import styles from "./ProductDetails.module.css";
 import Minus from "@/public/Minus.svg";
@@ -25,31 +26,43 @@ const ProductDetails: React.FC = () => {
   const [showQuantityButtons, setShowQuantityButtons] = useState(false);
   const [isMinusClicked, setIsMinusClicked] = useState(false);
   const [isPlusClicked, setIsPlusClicked] = useState(false);
+  const basketCount = useSelector((state: RootState) => state.basket.count);
+  const [isBasketOpen, setIsBasketOpen] = useState(false);
 
   const handleAddToCartClick = () => {
     setShowQuantityButtons(true);
-    setQuantity(1);
+    setQuantity(basketCount + 1);
+    dispatch(addToBasket(1));
   };
-
+  const handleMinusClick = () => {
+    if (quantity > 0) {
+      setQuantity(quantity - 1);
+      setIsMinusClicked(true);
+      setTimeout(() => setIsMinusClicked(false), 500);
+      dispatch(addToBasket(-1));
+    }
+  };
+  const handlePlusClick = () => {
+    setQuantity(quantity + 1);
+    setIsPlusClicked(true);
+    setTimeout(() => setIsPlusClicked(false), 500);
+    dispatch(addToBasket(1));
+  };
   const handlePlaceOrderClick = () => {
     setShowQuantityButtons(false);
     setQuantity(0);
   };
-
   useEffect(() => {
     if (id) {
       dispatch(fetchProductDetails(id as string));
     }
   }, [id, dispatch]);
-
   if (status === "loading") {
     return <Loading />;
   }
-
   if (!product) {
     return <NotFound />;
   }
-
   return (
     <div>
       <div className={styles.container}>
@@ -62,28 +75,11 @@ const ProductDetails: React.FC = () => {
           <p className={styles.price}>{product.price} ₽</p>
           {showQuantityButtons ? (
             <div className={styles.quantityContainer}>
-              <button
-                className={quantity > 0 ? (isMinusClicked ? styles.buttonMinusClicked : styles.buttonMinus) : styles.buttonMinusInactive}
-                onClick={() => {
-                  if (quantity > 0) {
-                    setQuantity(quantity - 1);
-                    setIsMinusClicked(true);
-                    setTimeout(() => setIsMinusClicked(false), 500);
-                  }
-                }}
-                disabled={quantity === 0}
-              >
+              <button className={quantity > 0 ? (isMinusClicked ? styles.buttonMinusClicked : styles.buttonMinus) : styles.buttonMinusInactive} onClick={handleMinusClick} disabled={quantity === 0}>
                 <Image src={isMinusClicked ? MinusWhite : Minus} alt={"Кнопка на один товар меньше"} width={20} height={20} />
               </button>
               <span className={styles.buttonQuantity}>{quantity}</span>
-              <button
-                className={isPlusClicked ? styles.buttonPlusClicked : styles.buttonPlus}
-                onClick={() => {
-                  setQuantity(quantity + 1);
-                  setIsPlusClicked(true);
-                  setTimeout(() => setIsPlusClicked(false), 500);
-                }}
-              >
+              <button className={isPlusClicked ? styles.buttonPlusClicked : styles.buttonPlus} onClick={handlePlusClick}>
                 <Image src={isPlusClicked ? PlusWhite : Plus} alt={"Кнопка на один товар больше"} width={20} height={20} />
               </button>
               {quantity > 0 && (
@@ -112,5 +108,4 @@ const ProductDetails: React.FC = () => {
     </div>
   );
 };
-
 export default ProductDetails;

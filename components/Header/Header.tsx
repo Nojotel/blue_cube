@@ -1,4 +1,3 @@
-// Header.tsx
 import React, { FC, useState, useEffect, MouseEvent } from "react";
 import Image from "next/image";
 import styles from "./Header.module.css";
@@ -10,6 +9,8 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Up from "@/public/Arrow Up.svg";
 import Basket from "@/components/Basket/Basket";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const Header: FC = () => {
   const [logoSrc, setLogoSrc] = useState(logo);
@@ -17,27 +18,24 @@ const Header: FC = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isOpen, setIsOpen] = useState(false); // Add this line
+  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const isBasketPage = pathname === "/basket";
+  const basketCount = useSelector((state: RootState) => state.basket.count);
 
   useEffect(() => {
     const getIsMobile = () => window.innerWidth < 530;
     const getIsMedium = () => window.innerWidth < 1050;
-
     setIsMobile(getIsMobile());
     setShowBackToTop(getIsMedium());
     setLogoSrc(getIsMobile() ? logoMob : logo);
-
     const handleResize = () => {
       const isMobile = getIsMobile();
       const isMedium = getIsMedium();
-
       setIsMobile(isMobile);
       setShowBackToTop(isMedium);
       setLogoSrc(isMobile ? logoMob : logo);
     };
-
     const handleScroll = () => {
       if (window.scrollY > 100) {
         setIsScrolled(true);
@@ -45,16 +43,13 @@ const Header: FC = () => {
         setIsScrolled(false);
       }
     };
-
     window.addEventListener("resize", handleResize);
     window.addEventListener("scroll", handleScroll);
-
     return () => {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
   const scrollToTop = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     window.scrollTo({
@@ -62,7 +57,6 @@ const Header: FC = () => {
       behavior: "smooth",
     });
   };
-
   return (
     <header className={styles.container}>
       <nav className={styles.navigation}>
@@ -76,10 +70,10 @@ const Header: FC = () => {
           </li>
         </ul>
         <Basket isOpen={isOpen} setIsOpen={setIsOpen}>
-          <div className={`${styles.basketContainer} ${isOpen || isBasketPage ? styles.hovered : ""}`} onClick={() => setIsOpen(!isOpen)}>
-            <Image className={styles.basket} src={isHovered || isBasketPage ? basketHover : basket} alt="Корзина" width={20} height={20} />
+          <div className={`${styles.basketContainer} ${isOpen || isBasketPage ? styles.hovered : ""} ${isOpen ? styles.opened : ""}`} onClick={() => setIsOpen(!isOpen)} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+            <Image className={styles.basket} src={isHovered || isOpen ? basketHover : basket} alt="Корзина" width={20} height={20} />
             {!isMobile && <span className={styles.basketText}>Корзина</span>}
-            <span style={{ color: "rgb(23, 32, 41)" }}>(0)</span>
+            <span style={{ color: "rgb(23, 32, 41)" }}>({basketCount})</span>
           </div>
         </Basket>
         {showBackToTop && (
@@ -91,5 +85,4 @@ const Header: FC = () => {
     </header>
   );
 };
-
 export default Header;

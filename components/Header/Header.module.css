@@ -56,6 +56,7 @@
   align-items: center;
   position: relative;
 }
+
 .basketContainer::after {
   content: "";
   position: absolute;
@@ -68,11 +69,13 @@
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.4s ease;
-  transform: scaleX(0);
 }
-.basketContainer.hovered::after {
+
+.basketContainer:hover::after,
+.basketContainer.opened::after {
   transform: scaleX(1);
 }
+
 .basket {
   width: 20px;
   height: 20px;
