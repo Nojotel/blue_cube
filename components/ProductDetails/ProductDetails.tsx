@@ -25,16 +25,13 @@ const ProductDetails: React.FC = () => {
   const [showQuantityButtons, setShowQuantityButtons] = useState(false);
   const [isMinusClicked, setIsMinusClicked] = useState(false);
   const [isPlusClicked, setIsPlusClicked] = useState(false);
-  const [isOrderPlaced, setIsOrderPlaced] = useState(false);
 
   const handleAddToCartClick = () => {
     setShowQuantityButtons(true);
     setQuantity(1);
-    setIsOrderPlaced(false);
   };
 
   const handlePlaceOrderClick = () => {
-    setIsOrderPlaced(true);
     setShowQuantityButtons(false);
     setQuantity(0);
   };
@@ -97,7 +94,7 @@ const ProductDetails: React.FC = () => {
             </div>
           ) : (
             <button className={styles.button} onClick={handleAddToCartClick}>
-              {isOrderPlaced ? "Добавить еще в корзину" : "Добавить в корзину"}
+              Добавить в корзину
             </button>
           )}
           <div className={styles.containerUndo}>

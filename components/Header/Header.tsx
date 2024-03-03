@@ -1,4 +1,4 @@
-"use client";
+// Header.tsx
 import React, { FC, useState, useEffect, MouseEvent } from "react";
 import Image from "next/image";
 import styles from "./Header.module.css";
@@ -9,6 +9,7 @@ import basketHover from "@/public/basketHover.svg";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Up from "@/public/Arrow Up.svg";
+import Basket from "@/components/Basket/Basket";
 
 const Header: FC = () => {
   const [logoSrc, setLogoSrc] = useState(logo);
@@ -16,6 +17,7 @@ const Header: FC = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // Add this line
   const pathname = usePathname();
   const isBasketPage = pathname === "/basket";
 
@@ -73,13 +75,13 @@ const Header: FC = () => {
             <Link href="/orders">Заказы</Link>
           </li>
         </ul>
-        <Link href="/basket">
-          <div className={`${styles.basketContainer} ${isHovered || isBasketPage ? styles.hovered : ""}`} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+        <Basket isOpen={isOpen} setIsOpen={setIsOpen}>
+          <div className={`${styles.basketContainer} ${isOpen || isBasketPage ? styles.hovered : ""}`} onClick={() => setIsOpen(!isOpen)}>
             <Image className={styles.basket} src={isHovered || isBasketPage ? basketHover : basket} alt="Корзина" width={20} height={20} />
             {!isMobile && <span className={styles.basketText}>Корзина</span>}
             <span style={{ color: "rgb(23, 32, 41)" }}>(0)</span>
           </div>
-        </Link>
+        </Basket>
         {showBackToTop && (
           <button onClick={scrollToTop} className={`${styles.backToTop} ${isScrolled ? styles.scrolled : ""}`}>
             <Image src={Up} alt="Logo" width={24} height={24} />
