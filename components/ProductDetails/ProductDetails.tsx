@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -6,64 +6,67 @@ import undo from "@/public/Undo.svg";
 import Loading from "@/app/loading";
 import NotFound from "@/app/loading";
 import { fetchProductDetails } from "@/redux/productDetailsReducer";
-import { addToBasket } from "@/redux/basketReducer";
+import { addToBasket, incrementQuantity, decrementQuantity, getQuantityInBasket } from "@/redux/basketReducer";
 import { GenerateStars } from "@/components/ProductCard/generateStars";
 import styles from "./ProductDetails.module.css";
-import Minus from "@/public/Minus.svg";
-import Plus from "@/public/Plus.svg";
-import MinusWhite from "@/public/MinusWhite.svg";
-import PlusWhite from "@/public/PlusWhite.svg";
 import { AppDispatch, RootState } from "@/redux/store";
 import { Product } from "@/redux/productReducer";
 import { setBasketOpen } from "@/redux/basketSlice";
+import QuantitySelector from "@/components/QuantitySelector/QuantitySelector";
 
 const ProductDetails: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { id } = router.query;
-  const product = useSelector((state: RootState) => state.productDetails.product) as Product;
+  const product = useSelector((state: RootState) => state.productDetails.product) as Product | null;
   const status = useSelector((state: RootState) => state.productDetails.status);
-  const [quantity, setQuantity] = useState(0);
-  const [showQuantityButtons, setShowQuantityButtons] = useState(false);
-  const [isMinusClicked, setIsMinusClicked] = useState(false);
-  const [isPlusClicked, setIsPlusClicked] = useState(false);
-  const basketCount = useSelector((state: RootState) => state.basket.count);
+  const quantityInBasket = useSelector((state: RootState) => (product ? getQuantityInBasket(state, product.id) : 0));
+  const [showQuantityButtons, setShowQuantityButtons] = React.useState(false);
+  const [isMinusClicked, setIsMinusClicked] = React.useState(false);
+  const [isPlusClicked, setIsPlusClicked] = React.useState(false);
 
   const handleAddToCartClick = () => {
-    setShowQuantityButtons(true);
-    setQuantity(basketCount + 1);
-    dispatch(addToBasket(1));
-  };
-  const handleMinusClick = () => {
-    if (quantity > 0) {
-      setQuantity(quantity - 1);
-      setIsMinusClicked(true);
-      setTimeout(() => setIsMinusClicked(false), 500);
-      dispatch(addToBasket(-1));
+    if (product) {
+      setShowQuantityButtons(true);
+      dispatch(addToBasket(product));
     }
   };
-  const handlePlusClick = () => {
-    setQuantity(quantity + 1);
-    setIsPlusClicked(true);
-    setTimeout(() => setIsPlusClicked(false), 500);
-    dispatch(addToBasket(1));
+
+  const handleMinusClick = () => {
+    if (product) {
+      dispatch(decrementQuantity(product.id));
+    }
   };
+
+  const handlePlusClick = () => {
+    if (product) {
+      if (quantityInBasket === 0) {
+        dispatch(addToBasket(product));
+      } else {
+        dispatch(incrementQuantity(product.id));
+      }
+    }
+  };
+
   const handlePlaceOrderClick = () => {
     dispatch(setBasketOpen(true));
     setShowQuantityButtons(false);
-    setQuantity(0);
   };
+
   useEffect(() => {
     if (id) {
       dispatch(fetchProductDetails(id as string));
     }
   }, [id, dispatch]);
+
   if (status === "loading") {
     return <Loading />;
   }
+
   if (!product) {
     return <NotFound />;
   }
+
   return (
     <div>
       <div className={styles.container}>
@@ -75,20 +78,7 @@ const ProductDetails: React.FC = () => {
           </p>
           <p className={styles.price}>{product.price} ₽</p>
           {showQuantityButtons ? (
-            <div className={styles.quantityContainer}>
-              <button className={quantity > 0 ? (isMinusClicked ? styles.buttonMinusClicked : styles.buttonMinus) : styles.buttonMinusInactive} onClick={handleMinusClick} disabled={quantity === 0}>
-                <Image src={isMinusClicked ? MinusWhite : Minus} alt={"Кнопка на один товар меньше"} width={20} height={20} />
-              </button>
-              <span className={styles.buttonQuantity}>{quantity}</span>
-              <button className={isPlusClicked ? styles.buttonPlusClicked : styles.buttonPlus} onClick={handlePlusClick}>
-                <Image src={isPlusClicked ? PlusWhite : Plus} alt={"Кнопка на один товар больше"} width={20} height={20} />
-              </button>
-              {quantity > 0 && (
-                <button className={styles.orderButton} onClick={handlePlaceOrderClick}>
-                  Оформить заказ
-                </button>
-              )}
-            </div>
+            <QuantitySelector quantity={quantityInBasket} isMinusClicked={isMinusClicked} isPlusClicked={isPlusClicked} handleMinusClick={handleMinusClick} handlePlusClick={handlePlusClick} handlePlaceOrderClick={handlePlaceOrderClick} />
           ) : (
             <button className={styles.button} onClick={handleAddToCartClick}>
               Добавить в корзину
@@ -109,4 +99,5 @@ const ProductDetails: React.FC = () => {
     </div>
   );
 };
+
 export default ProductDetails;

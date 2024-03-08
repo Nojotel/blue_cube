@@ -1,0 +1,110 @@
+.quantityContainer {
+  width: auto;
+  height: 52px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.buttonMinus {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px 0px 0px 12px;
+  background: rgb(230, 241, 252);
+  width: 52px;
+  height: 52px;
+  border: 0;
+  background-color: #e6f1fc;
+}
+
+.buttonMinusInactive {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px 0px 0px 12px;
+  background: rgb(230, 241, 252);
+  width: 52px;
+  height: 52px;
+  border: 0;
+  background-color: #e6f1fc;
+  opacity: 0.4;
+}
+
+.buttonQuantity {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 52px;
+  height: 52px;
+  background: rgb(230, 241, 252);
+  color: rgb(23, 32, 41);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0px;
+  text-align: center;
+}
+
+.buttonPlus {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0px 12px 12px 0px;
+  background: rgb(230, 241, 252);
+  width: 52px;
+  height: 52px;
+  border: 0;
+  background-color: #e6f1fc;
+  margin-right: 8px;
+}
+
+.buttonMinus:hover,
+.buttonPlus:hover {
+  background-color: #cfe4fa;
+}
+
+.buttonMinusClicked {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px 0px 0px 12px;
+  background: #0073e6;
+  width: 52px;
+  height: 52px;
+  border: 0;
+}
+
+.buttonPlusClicked {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0px 12px 12px 0px;
+  background: #0073e6;
+  width: 52px;
+  height: 52px;
+  border: 0;
+  margin-right: 8px;
+}
+
+.orderButton {
+  width: 182px;
+  height: 52px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  background: rgb(0, 115, 230);
+  border: 0;
+  color: rgb(255, 255, 255);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0px;
+  text-align: center;
+}
+
+.orderButton:hover {
+  background-color: #338feb;
+}

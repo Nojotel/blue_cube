@@ -22,7 +22,8 @@ const Header: FC = () => {
   const isOpen = useSelector((state: RootState) => state.basketVisibility.isOpen);
   const pathname = usePathname();
   const isBasketPage = pathname === "/basket";
-  const basketCount = useSelector((state: RootState) => state.basket.count);
+  const basketItems = useSelector((state: RootState) => state.basket.items);
+  const basketCount = basketItems.reduce((count, item) => count + item.quantity, 0);
 
   useEffect(() => {
     const getIsMobile = () => window.innerWidth < 530;

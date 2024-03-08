@@ -38,7 +38,6 @@
   margin-bottom: 10px;
   margin-left: 16px;
   margin-top: 0;
-  margin-bottom: 0;
 }
 
 .price {
@@ -49,19 +48,20 @@
   margin-top: 16px;
   margin-bottom: 16px;
 }
+
 .information {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: baseline;
 }
+
 .button {
   border-radius: 12px;
   background: rgb(0, 115, 230);
   width: 346px;
   height: 52px;
   border: 0;
-
   color: rgb(255, 255, 255);
   font-size: 16px;
   font-weight: 700;
@@ -70,9 +70,11 @@
   text-align: center;
   cursor: pointer;
 }
+
 .button:hover {
   background: #338feb;
 }
+
 .containerUndo {
   display: flex;
   justify-content: center;
@@ -81,10 +83,12 @@
   height: 20px;
   margin-bottom: 8px;
 }
+
 .undo {
   width: 20px;
   height: 20px;
 }
+
 .textUndo {
   color: rgb(23, 32, 41);
   font-size: 16px;
@@ -94,6 +98,7 @@
   text-align: left;
   margin-left: 8px;
 }
+
 .titleUndo {
   color: rgb(23, 32, 41);
   font-size: 16px;
@@ -104,6 +109,7 @@
   margin-bottom: 16px;
   width: 346px;
 }
+
 .subtitleUndo {
   color: rgb(128, 128, 128);
   font-size: 12px;
@@ -113,6 +119,7 @@
   text-align: left;
   width: 346px;
 }
+
 .description {
   margin: 0 auto;
   border-radius: 16px;
@@ -124,6 +131,7 @@
   align-items: flex-start;
   padding: 24px;
 }
+
 .titleDescription {
   color: rgb(23, 32, 41);
   font-size: 20px;
@@ -133,6 +141,7 @@
   text-align: left;
   margin-bottom: 16px;
 }
+
 .subtitleDescription {
   color: rgb(23, 32, 41);
   font-size: 16px;
@@ -142,114 +151,12 @@
   text-align: left;
   max-width: 744px;
 }
+
 .subtitleDescription a {
   pointer-events: none;
   color: rgb(23, 32, 41);
 }
-.quantityContainer {
-  width: 346px;
-  height: 52px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.buttonMinus {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px 0px 0px 12px;
-  background: rgb(230, 241, 252);
-  width: 52px;
-  height: 52px;
-  border: 0;
-  background-color: #e6f1fc;
-}
-.buttonMinusInactive {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px 0px 0px 12px;
-  background: rgb(230, 241, 252);
-  width: 52px;
-  height: 52px;
-  border: 0;
-  background-color: #e6f1fc;
-  opacity: 0.4;
-}
 
-.buttonQuantity {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 52px;
-  height: 52px;
-  background: rgb(230, 241, 252);
-
-  color: rgb(23, 32, 41);
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 20px;
-  letter-spacing: 0px;
-  text-align: center;
-}
-.buttonPlus {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 0px 12px 12px 0px;
-  background: rgb(230, 241, 252);
-  width: 52px;
-  height: 52px;
-  border: 0;
-  background-color: #e6f1fc;
-  margin-right: 8px;
-}
-.buttonMinus:hover,
-.buttonPlus:hover {
-  background-color: #cfe4fa;
-}
-.buttonMinusClicked {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px 0px 0px 12px;
-  background: #0073e6;
-  width: 52px;
-  height: 52px;
-  border: 0;
-}
-.buttonPlusClicked {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 0px 12px 12px 0px;
-  background: #0073e6;
-  width: 52px;
-  height: 52px;
-  border: 0;
-  margin-right: 8px;
-}
-.orderButton {
-  width: 182px;
-  height: 52px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  background: rgb(0, 115, 230);
-  border: 0;
-
-  color: rgb(255, 255, 255);
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 20px;
-  letter-spacing: 0px;
-  text-align: center;
-}
-.orderButton:hover {
-  background-color: #338feb;
-}
 @media (max-width: 850px) {
   .container {
     flex-direction: column;
@@ -259,9 +166,11 @@
     height: auto;
     width: 70%;
   }
+
   .quantityContainer {
     width: 100%;
   }
+
   .information {
     text-align: center;
   }
@@ -305,11 +214,13 @@
     text-align: center;
   }
 }
+
 @media (max-width: 650px) {
   .quantityContainer {
     width: 100%;
     justify-content: flex-start;
   }
+
   .container {
     flex-direction: column;
     align-items: center;
@@ -318,33 +229,42 @@
     height: auto;
     width: 98%;
   }
+
   .image {
     width: 95%;
   }
+
   .title {
     text-align: left;
     white-space: wrap;
   }
+
   .description {
     padding: 12px;
     height: auto;
     width: 95%;
   }
+
   .button {
     width: 95%;
   }
+
   .titleUndo {
     width: 95%;
   }
+
   .subtitleUndo {
     width: 95%;
   }
+
   .title {
     width: 95%;
   }
+
   .information {
     width: 98%;
   }
+
   .containerUndo {
     margin: 0 auto;
     margin-top: 20px;
