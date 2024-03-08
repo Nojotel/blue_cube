@@ -13,11 +13,15 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
     { id: "2", title: "Product 2", quantity: 1 },
   ];
 
+  const handleContainerClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+  };
+
   return (
     <div onClick={() => onToggle(!isOpen)}>
       {children}
       {isOpen && (
-        <div className={styles.container}>
+        <div className={styles.container} onClick={handleContainerClick}>
           {basketItems.map((item) => (
             <div key={item.id}>
               {item.title} - Quantity: {item.quantity}

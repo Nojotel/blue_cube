@@ -2,7 +2,6 @@ import React, { FC, useState, useEffect, MouseEvent, useCallback } from "react";
 import Image from "next/image";
 import styles from "./Header.module.css";
 import logo from "@/public/logo.svg";
-import logoMob from "@/public/LogoMob.svg";
 import basket from "@/public/basket.svg";
 import basketHover from "@/public/basketHover.svg";
 import { usePathname } from "next/navigation";
@@ -30,13 +29,13 @@ const Header: FC = () => {
     const getIsMedium = () => window.innerWidth < 1050;
     setIsMobile(getIsMobile());
     setShowBackToTop(getIsMedium());
-    setLogoSrc(getIsMobile() ? logoMob : logo);
+    setLogoSrc(logo);
     const handleResize = () => {
       const isMobile = getIsMobile();
       const isMedium = getIsMedium();
       setIsMobile(isMobile);
       setShowBackToTop(isMedium);
-      setLogoSrc(isMobile ? logoMob : logo);
+      setLogoSrc(logo);
     };
     const handleScroll = () => {
       if (window.scrollY > 100) {
