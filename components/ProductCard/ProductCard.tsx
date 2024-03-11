@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Image from "next/legacy/image"; // Использование next/legacy/image
+import Image from "next/legacy/image";
 import styles from "./ProductCard.module.css";
 import { fetchProducts } from "@/redux/productReducer";
 import Loading from "@/app/loading";
