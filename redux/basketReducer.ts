@@ -45,7 +45,6 @@ const basketSlice = createSlice({
         if (item.quantity > 1) {
           item.quantity -= 1;
         } else {
-          // Вместо удаления добавляем флаг для отображения кнопки "Удалить"
           item.quantity = 0;
         }
       }
