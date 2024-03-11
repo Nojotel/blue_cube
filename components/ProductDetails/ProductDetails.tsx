@@ -6,7 +6,7 @@ import undo from "@/public/Undo.svg";
 import Loading from "@/app/loading";
 import NotFound from "@/app/loading";
 import { fetchProductDetails } from "@/redux/productDetailsReducer";
-import { addToBasket, incrementQuantity, decrementQuantity, getQuantityInBasket } from "@/redux/basketReducer";
+import { addToBasket, incrementQuantity, decrementQuantity, getQuantityInBasket, removeFromBasket } from "@/redux/basketReducer";
 import { GenerateStars } from "@/components/ProductCard/generateStars";
 import styles from "./ProductDetails.module.css";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -21,9 +21,7 @@ const ProductDetails: React.FC = () => {
   const product = useSelector((state: RootState) => state.productDetails.product) as Product | null;
   const status = useSelector((state: RootState) => state.productDetails.status);
   const quantityInBasket = useSelector((state: RootState) => (product ? getQuantityInBasket(state, product.id) : 0));
-  const [showQuantityButtons, setShowQuantityButtons] = React.useState(false);
-  const [isMinusClicked, setIsMinusClicked] = React.useState(false);
-  const [isPlusClicked, setIsPlusClicked] = React.useState(false);
+  const [showQuantityButtons, setShowQuantityButtons] = React.useState(quantityInBasket > 0);
 
   const handleAddToCartClick = () => {
     if (product) {
@@ -53,11 +51,22 @@ const ProductDetails: React.FC = () => {
     setShowQuantityButtons(false);
   };
 
+  const handleRemoveFromBasket = () => {
+    if (product) {
+      dispatch(removeFromBasket(product.id));
+      setShowQuantityButtons(false);
+    }
+  };
+
   useEffect(() => {
     if (id) {
       dispatch(fetchProductDetails(id as string));
     }
   }, [id, dispatch]);
+
+  useEffect(() => {
+    setShowQuantityButtons(quantityInBasket > 0);
+  }, [quantityInBasket]);
 
   if (status === "loading") {
     return <Loading />;
@@ -78,7 +87,7 @@ const ProductDetails: React.FC = () => {
           </p>
           <p className={styles.price}>{product.price} ₽</p>
           {showQuantityButtons ? (
-            <QuantitySelector quantity={quantityInBasket} isMinusClicked={isMinusClicked} isPlusClicked={isPlusClicked} handleMinusClick={handleMinusClick} handlePlusClick={handlePlusClick} handlePlaceOrderClick={handlePlaceOrderClick} />
+            <QuantitySelector quantity={quantityInBasket} isMinusClicked={false} isPlusClicked={false} handleMinusClick={handleMinusClick} handlePlusClick={handlePlusClick} handleRemoveClick={handleRemoveFromBasket} handlePlaceOrderClick={handlePlaceOrderClick} />
           ) : (
             <button className={styles.button} onClick={handleAddToCartClick}>
               Добавить в корзину

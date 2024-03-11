@@ -3,7 +3,7 @@ import styles from "./Basket.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
 import Image from "next/image";
-import { incrementQuantity, decrementQuantity } from "@/redux/basketReducer";
+import { incrementQuantity, decrementQuantity, removeFromBasket } from "@/redux/basketReducer";
 import QuantitySelector from "@/components/QuantitySelector/QuantitySelector";
 
 interface BasketItem {
@@ -48,6 +48,10 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
     dispatch(incrementQuantity(productId));
   };
 
+  const handleRemoveClick = (productId: string) => {
+    dispatch(removeFromBasket(productId));
+  };
+
   const calculateItemPrice = (item: BasketItem) => {
     return item.price * item.quantity;
   };
@@ -67,7 +71,7 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
                 <Image className={styles.image} src={item.picture} alt={item.title} width={50} height={50} />
                 <div className={styles.title}>{trimTextToWholeWords(item.title, 20)}</div>
 
-                <QuantitySelector quantity={item.quantity} isMinusClicked={false} isPlusClicked={false} handleMinusClick={() => handleMinusClick(item.id)} handlePlusClick={() => handlePlusClick(item.id)} showOrderButton={false} />
+                <QuantitySelector quantity={item.quantity} isMinusClicked={false} isPlusClicked={false} handleMinusClick={() => handleMinusClick(item.id)} handlePlusClick={() => handlePlusClick(item.id)} handleRemoveClick={() => handleRemoveClick(item.id)} showOrderButton={false} />
                 <div className={styles.price}>
                   {item.quantity > 1 && <span className={styles.subPrice}>{`${item.price} ₽ за шт. `}</span>}
                   <span className={styles.price}>{calculateItemPrice(item)} ₽</span>
