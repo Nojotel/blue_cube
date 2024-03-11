@@ -5,18 +5,23 @@ import leftIcon from "@/public/Left.svg";
 import rightIcon from "@/public/Right.svg";
 import leftActiveIcon from "@/public/LeftActive.svg";
 import rightActiveIcon from "@/public/RightActive.svg";
+
 interface PaginationProps {
   setPage: (page: number) => void;
   page: number;
 }
+
 const Pagination: FC<PaginationProps> = ({ setPage, page }) => {
   const [isLeftClicked, setIsLeftClicked] = useState(false);
   const [isRightClicked, setIsRightClicked] = useState(false);
   const [visiblePages, setVisiblePages] = useState(5);
   const totalPages = 10;
+  const [isClient, setIsClient] = useState(false);
+
   useEffect(() => {
     localStorage.setItem("page", page.toString());
   }, [page]);
+
   useEffect(() => {
     const updateVisiblePages = () => {
       if (window.innerWidth < 530) {
@@ -25,15 +30,25 @@ const Pagination: FC<PaginationProps> = ({ setPage, page }) => {
         setVisiblePages(5);
       }
     };
+
     window.addEventListener("resize", updateVisiblePages);
     updateVisiblePages();
+
+    setIsClient(true);
+
     return () => window.removeEventListener("resize", updateVisiblePages);
   }, []);
+
+  if (!isClient) {
+    return null;
+  }
+
   let startPage = page - Math.floor(visiblePages / 2);
   startPage = Math.max(startPage, 1);
   startPage = Math.min(startPage, totalPages - visiblePages + 1);
   let endPage = startPage + visiblePages - 1;
   endPage = Math.min(endPage, totalPages);
+
   const handleClick = (newPage: number, direction: string) => {
     setPage(newPage);
     if (direction === "left") {
@@ -44,6 +59,7 @@ const Pagination: FC<PaginationProps> = ({ setPage, page }) => {
       setTimeout(() => setIsRightClicked(false), 500);
     }
   };
+
   return (
     <div className={styles.container}>
       {page > 1 && (
@@ -67,4 +83,5 @@ const Pagination: FC<PaginationProps> = ({ setPage, page }) => {
     </div>
   );
 };
+
 export default Pagination;

@@ -5,6 +5,7 @@ import styles from "./ProductList.module.css";
 
 const useScrollPosition = (initialPage: number): [number, Dispatch<SetStateAction<number>>] => {
   const [page, setPage] = useState(initialPage);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,10 +23,16 @@ const useScrollPosition = (initialPage: number): [number, Dispatch<SetStateActio
     window.addEventListener("scroll", saveScrollPosition);
     handleScroll();
 
+    setIsClient(true);
+
     return () => {
       window.removeEventListener("scroll", saveScrollPosition);
     };
   }, []);
+
+  if (!isClient) {
+    return [initialPage, () => {}];
+  }
 
   return [page, setPage];
 };
@@ -34,16 +41,22 @@ const ProductList = () => {
   const [hasHydrated, setHasHydrated] = useState(false);
   const initialPage = typeof window !== "undefined" ? Number(localStorage.getItem("page")) || 1 : 1;
   const [page, setPage] = useScrollPosition(initialPage);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setHasHydrated(true);
+    setIsClient(true);
   }, []);
 
   useEffect(() => {
-    if (hasHydrated) {
+    if (hasHydrated && isClient) {
       setPage(initialPage);
     }
-  }, [hasHydrated, setPage, initialPage]);
+  }, [hasHydrated, isClient, setPage, initialPage]);
+
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <div className={styles.container}>
