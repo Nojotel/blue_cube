@@ -70,12 +70,13 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
               <div key={item.id} className={styles.basketItem}>
                 <Image className={styles.image} src={item.picture} alt={item.title} width={50} height={50} />
                 <div className={styles.title}>{trimTextToWholeWords(item.title, 20)}</div>
-
                 <QuantitySelector quantity={item.quantity} isMinusClicked={false} isPlusClicked={false} handleMinusClick={() => handleMinusClick(item.id)} handlePlusClick={() => handlePlusClick(item.id)} handleRemoveClick={() => handleRemoveClick(item.id)} showOrderButton={false} />
-                <div className={styles.price}>
-                  {item.quantity > 1 && <span className={styles.subPrice}>{`${item.price} ₽ за шт. `}</span>}
-                  <span className={styles.price}>{calculateItemPrice(item)} ₽</span>
-                </div>
+                {item.quantity > 0 && (
+                  <div className={styles.price}>
+                    {item.quantity > 1 && <span className={styles.subPrice}>{`${item.price} ₽ за шт. `}</span>}
+                    <span className={styles.price}>{calculateItemPrice(item)} ₽</span>
+                  </div>
+                )}
               </div>
             ))
           ) : (
