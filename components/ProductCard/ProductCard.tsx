@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Image from "next/image";
+import Image from "next/legacy/image"; // Использование next/legacy/image
 import styles from "./ProductCard.module.css";
 import { fetchProducts } from "@/redux/productReducer";
 import Loading from "@/app/loading";
@@ -11,19 +11,22 @@ import { AppDispatch, RootState } from "@/redux/store";
 interface ProductCardProps {
   setPage: (page: number) => void;
   page: number;
+  hasHydrated: boolean;
 }
 
 const selectProducts = (state: RootState) => state.product.products;
 const selectStatus = (state: RootState) => state.product.status;
 
-const ProductCard: React.FC<ProductCardProps> = ({ setPage, page }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ setPage, page, hasHydrated }) => {
   const dispatch = useDispatch<AppDispatch>();
   const products = useSelector(selectProducts);
   const status = useSelector(selectStatus);
 
   useEffect(() => {
-    dispatch(fetchProducts(page));
-  }, [page, dispatch]);
+    if (hasHydrated) {
+      dispatch(fetchProducts(page));
+    }
+  }, [page, dispatch, hasHydrated]);
 
   if (status === "loading") {
     return <Loading />;

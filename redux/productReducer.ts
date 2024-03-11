@@ -28,9 +28,8 @@ const initialState: ProductState = {
   error: null,
 };
 
-export const fetchProducts = createAsyncThunk("products/fetchProducts", async (page: number, { getState }) => {
-  const limit = (getState() as ProductState).limit || 15;
-  const response = await axios.get(`https://skillfactory-task.detmir.team/products?limit=${limit}&page=${page}`);
+export const fetchProducts = createAsyncThunk("products/fetchProducts", async (page: number) => {
+  const response = await axios.get(`https://skillfactory-task.detmir.team/products?limit=15&page=${page}`);
   return response.data.data;
 });
 
