@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -13,6 +13,10 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { Product } from "@/redux/productReducer";
 import { setBasketOpen } from "@/redux/basketSlice";
 import QuantitySelector from "@/components/QuantitySelector/QuantitySelector";
+import Modal from "@/components/Modal/Modal";
+import store from "@/redux/store";
+
+const MAX_TOTAL_COST = 10000;
 
 const ProductDetails: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,9 +26,19 @@ const ProductDetails: React.FC = () => {
   const status = useSelector((state: RootState) => state.productDetails.status);
   const quantityInBasket = useSelector((state: RootState) => (product ? getQuantityInBasket(state, product.id) : 0));
   const [showQuantityButtons, setShowQuantityButtons] = React.useState(quantityInBasket > 0);
+  const [showModal, setShowModal] = useState(false);
+
+  const getTotalPriceInBasket = (state: RootState) => {
+    return state.basket.items.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
 
   const handleAddToCartClick = () => {
     if (product) {
+      const totalCost = getTotalPriceInBasket(store.getState()) + product.price;
+      if (totalCost > MAX_TOTAL_COST) {
+        setShowModal(true);
+        return;
+      }
       setShowQuantityButtons(true);
       dispatch(addToBasket(product));
     }
@@ -32,16 +46,26 @@ const ProductDetails: React.FC = () => {
 
   const handleMinusClick = () => {
     if (product) {
+      const totalCost = getTotalPriceInBasket(store.getState()) - product.price;
+      if (totalCost < 0) {
+        setShowModal(true);
+        return;
+      }
       dispatch(decrementQuantity(product.id));
     }
   };
 
   const handlePlusClick = () => {
     if (product) {
-      if (quantityInBasket === 0) {
-        dispatch(addToBasket(product));
-      } else {
+      const totalCost = getTotalPriceInBasket(store.getState()) + product.price;
+      if (totalCost > MAX_TOTAL_COST) {
+        setShowModal(true);
+        return;
+      }
+      if (quantityInBasket < 10) {
         dispatch(incrementQuantity(product.id));
+      } else {
+        setShowModal(true);
       }
     }
   };
@@ -56,6 +80,10 @@ const ProductDetails: React.FC = () => {
       dispatch(removeFromBasket(product.id));
       setShowQuantityButtons(false);
     }
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   useEffect(() => {
@@ -100,6 +128,7 @@ const ProductDetails: React.FC = () => {
           <div className={styles.titleUndo}>Обменять или вернуть товар надлежащего качества можно в течение 14 дней с момента покупки.</div>
           <div className={styles.subtitleUndo}>Цены в интернет-магазине могут отличаться от розничных магазинов.</div>
         </div>
+        <Modal message="Корзина переполнена" isOpen={showModal} onClose={closeModal} />
       </div>
       <div className={styles.description}>
         <div className={styles.titleDescription}>Описание</div>

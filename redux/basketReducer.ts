@@ -15,6 +15,7 @@ const initialState: BasketState = {
 };
 
 const MAX_TOTAL_COST = 10000;
+const MAX_ITEM_QUANTITY = 10;
 
 const basketSlice = createSlice({
   name: "basket",
@@ -25,7 +26,7 @@ const basketSlice = createSlice({
       if (totalCost + action.payload.price <= MAX_TOTAL_COST) {
         const item = state.items.find((i) => i.id === action.payload.id);
         if (item) {
-          if (item.quantity < 10) {
+          if (item.quantity < MAX_ITEM_QUANTITY) {
             item.quantity += 1;
           }
         } else {
@@ -42,7 +43,7 @@ const basketSlice = createSlice({
     incrementQuantity: (state, action: PayloadAction<string>) => {
       const item = state.items.find((i) => i.id === action.payload);
       const totalCost = state.items.reduce((total, item) => total + item.price * item.quantity, 0);
-      if (item && item.quantity < 10 && totalCost + item.price <= MAX_TOTAL_COST) {
+      if (item && item.quantity < MAX_ITEM_QUANTITY && totalCost + item.price <= MAX_TOTAL_COST) {
         item.quantity += 1;
       }
     },

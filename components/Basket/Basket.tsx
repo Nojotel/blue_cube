@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Basket.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
 import Image from "next/image";
 import { incrementQuantity, decrementQuantity, removeFromBasket } from "@/redux/basketReducer";
 import QuantitySelector from "@/components/QuantitySelector/QuantitySelector";
+import Modal from "@/components/Modal/Modal";
 
 interface BasketItem {
   id: string;
@@ -19,6 +20,8 @@ interface BasketProps {
   onToggle: (value: boolean) => void;
   children: React.ReactNode;
 }
+
+const MAX_TOTAL_COST = 10000;
 
 function trimTextToWholeWords(text: string, maxLength: number): string {
   let trimmedText = text.substr(0, maxLength);
@@ -35,6 +38,7 @@ function trimTextToWholeWords(text: string, maxLength: number): string {
 const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
   const dispatch = useDispatch();
   const basketItems = useSelector((state: RootState) => state.basket.items);
+  const [showModal, setShowModal] = useState(false);
 
   const handleContainerClick = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -45,6 +49,12 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
   };
 
   const handlePlusClick = (productId: string) => {
+    const item = basketItems.find((item) => item.id === productId);
+    const totalCost = calculateTotalPrice() + (item?.price || 0);
+    if (totalCost > MAX_TOTAL_COST) {
+      setShowModal(true);
+      return;
+    }
     dispatch(incrementQuantity(productId));
   };
 
@@ -58,6 +68,10 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
 
   const calculateTotalPrice = () => {
     return basketItems.reduce((total, item) => total + calculateItemPrice(item), 0);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -86,6 +100,7 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
             <span className={styles.totalPriceText}>Итого:</span>
             <span className={styles.totalPriceValue}>{calculateTotalPrice()} ₽</span>
           </div>
+          <Modal message="Корзина переполнена" isOpen={showModal} onClose={closeModal} />
         </div>
       )}
     </div>
