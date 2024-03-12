@@ -1,7 +1,13 @@
-import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
+import React, { useEffect, useState, Dispatch, SetStateAction, useCallback } from "react";
 import ProductCard from "@/components/ProductCard/ProductCard";
 import Pagination from "@/components/Pagination/Pagination";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchProducts } from "@/redux/productReducer";
+import { AppDispatch, RootState } from "@/redux/store";
 import styles from "./ProductList.module.css";
+
+const selectProducts = (state: RootState) => state.product.products;
+const selectStatus = (state: RootState) => state.product.status;
 
 const useScrollPosition = (initialPage: number): [number, Dispatch<SetStateAction<number>>] => {
   const [page, setPage] = useState(initialPage);
@@ -22,7 +28,6 @@ const useScrollPosition = (initialPage: number): [number, Dispatch<SetStateActio
 
     window.addEventListener("scroll", saveScrollPosition);
     handleScroll();
-
     setIsClient(true);
 
     return () => {
@@ -43,6 +48,17 @@ const ProductList = () => {
   const [page, setPage] = useScrollPosition(initialPage);
   const [isClient, setIsClient] = useState(false);
 
+  const dispatch = useDispatch<AppDispatch>();
+  const products = useSelector(selectProducts);
+  const status = useSelector(selectStatus);
+
+  const dispatchFetchProducts = useCallback(
+    (page: number) => {
+      dispatch(fetchProducts(page));
+    },
+    [dispatch]
+  );
+
   useEffect(() => {
     setHasHydrated(true);
     setIsClient(true);
@@ -50,9 +66,9 @@ const ProductList = () => {
 
   useEffect(() => {
     if (hasHydrated && isClient) {
-      setPage(initialPage);
+      dispatchFetchProducts(page);
     }
-  }, [hasHydrated, isClient, setPage, initialPage]);
+  }, [hasHydrated, isClient, page, dispatchFetchProducts]);
 
   if (!isClient) {
     return null;

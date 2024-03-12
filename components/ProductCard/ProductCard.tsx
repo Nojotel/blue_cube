@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Image from "next/legacy/image";
 import styles from "./ProductCard.module.css";
@@ -22,11 +22,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ setPage, page, hasHydrated })
   const products = useSelector(selectProducts);
   const status = useSelector(selectStatus);
 
+  const dispatchFetchProducts = useCallback(
+    (page: number) => {
+      dispatch(fetchProducts(page));
+    },
+    [dispatch]
+  );
+
   useEffect(() => {
     if (hasHydrated) {
-      dispatch(fetchProducts(page));
+      dispatchFetchProducts(page);
     }
-  }, [page, dispatch, hasHydrated]);
+  }, [page, hasHydrated, dispatchFetchProducts]);
 
   if (status === "loading") {
     return <Loading />;
