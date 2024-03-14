@@ -19,6 +19,7 @@
 }
 
 .title {
+  font-family: Circe Rounded DM, sans-serif;
   color: rgb(23, 32, 41);
   font-weight: 700;
   font-size: 28px;
@@ -41,6 +42,7 @@
 }
 
 .price {
+  font-family: Circe Rounded DM, sans-serif;
   color: rgb(23, 32, 41);
   font-weight: 800;
   font-size: 28px;

@@ -15,13 +15,7 @@ a {
 }
 @font-face {
   font-family: "Circe Rounded DM";
-  src: url("https://db.onlinewebfonts.com/t/10851f277d913a0868eb0ecf5e01fb29.eot");
-  src: url("https://db.onlinewebfonts.com/t/10851f277d913a0868eb0ecf5e01fb29.eot?#iefix") format("embedded-opentype"), url("https://db.onlinewebfonts.com/t/10851f277d913a0868eb0ecf5e01fb29.woff2") format("woff2"), url("https://db.onlinewebfonts.com/t/10851f277d913a0868eb0ecf5e01fb29.woff") format("woff"), url("https://db.onlinewebfonts.com/t/10851f277d913a0868eb0ecf5e01fb29.ttf") format("truetype"), url("https://db.onlinewebfonts.com/t/10851f277d913a0868eb0ecf5e01fb29.svg#Circe Rounded DM Web") format("svg");
-}
-.global {
-  font-family: "Nunito", sans-serif;
-}
-
-.some-block {
-  font-family: "Circe Rounded DM", sans-serif;
+  src: url("../font//Circe\ Rounded\ DM.ttf") format("truetype");
+  font-weight: bolder;
+  font-style: normal;
 }
