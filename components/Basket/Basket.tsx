@@ -100,6 +100,7 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
             <span className={styles.totalPriceText}>Итого:</span>
             <span className={styles.totalPriceValue}>{calculateTotalPrice()} ₽</span>
           </div>
+          <button className={styles.checkout}>Оформить заказ</button>
           <Modal message="Корзина переполнена" isOpen={showModal} onClose={closeModal} />
         </div>
       )}
