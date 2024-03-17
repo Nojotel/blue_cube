@@ -95,6 +95,7 @@
   letter-spacing: 0px;
   text-align: center;
   border: 0;
+  margin-top: 16px;
 }
 .checkout:hover {
   background: #338feb;

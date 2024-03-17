@@ -74,6 +74,10 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
     setShowModal(false);
   };
 
+  const handleCheckoutClick = () => {
+    console.log("Оформление заказа с составом корзины:", basketItems);
+  };
+
   return (
     <div onClick={() => onToggle(!isOpen)}>
       {children}
@@ -100,7 +104,9 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
             <span className={styles.totalPriceText}>Итого:</span>
             <span className={styles.totalPriceValue}>{calculateTotalPrice()} ₽</span>
           </div>
-          <button className={styles.checkout}>Оформить заказ</button>
+          <button className={styles.checkout} onClick={handleCheckoutClick}>
+            Оформить заказ
+          </button>
           <Modal message="Корзина переполнена" isOpen={showModal} onClose={closeModal} />
         </div>
       )}
