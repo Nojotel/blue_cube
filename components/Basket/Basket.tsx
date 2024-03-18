@@ -88,6 +88,7 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(basketItems),
+        credentials: "include",
       });
 
       if (response.ok) {
@@ -114,6 +115,7 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(updatedBasket),
+        credentials: "include",
       });
 
       if (response.ok) {
