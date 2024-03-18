@@ -6,7 +6,7 @@ import undo from "@/public/Undo.svg";
 import Loading from "@/app/loading";
 import NotFound from "@/app/loading";
 import { fetchProductDetails } from "@/redux/productDetailsReducer";
-import { addToBasket, incrementQuantity, decrementQuantity, getQuantityInBasket, removeFromBasket } from "@/redux/basketReducer";
+import { addToBasket, incrementQuantity, decrementQuantity, getQuantityInBasket, removeFromBasket, updateBasket } from "@/redux/basketReducer";
 import { GenerateStars } from "@/components/ProductCard/generateStars";
 import styles from "./ProductDetails.module.css";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -41,32 +41,21 @@ const ProductDetails: React.FC = () => {
       }
       setShowQuantityButtons(true);
       dispatch(addToBasket(product));
+      const updatedBasket = store.getState().basket.items.map(({ id, quantity }) => ({ id, quantity }));
+      updateBasketOnServer(updatedBasket);
     }
   };
 
-  const handleMinusClick = () => {
+  const handleQuantityChange = (increment: boolean) => {
     if (product) {
-      const totalCost = getTotalPriceInBasket(store.getState()) - product.price;
-      if (totalCost < 0) {
+      const totalCost = getTotalPriceInBasket(store.getState()) + (increment ? product.price : -product.price);
+      if (totalCost > MAX_TOTAL_COST || (increment && quantityInBasket >= 10)) {
         setShowModal(true);
         return;
       }
-      dispatch(decrementQuantity(product.id));
-    }
-  };
-
-  const handlePlusClick = () => {
-    if (product) {
-      const totalCost = getTotalPriceInBasket(store.getState()) + product.price;
-      if (totalCost > MAX_TOTAL_COST) {
-        setShowModal(true);
-        return;
-      }
-      if (quantityInBasket < 10) {
-        dispatch(incrementQuantity(product.id));
-      } else {
-        setShowModal(true);
-      }
+      increment ? dispatch(incrementQuantity(product.id)) : dispatch(decrementQuantity(product.id));
+      const updatedBasket = store.getState().basket.items.map(({ id, quantity }) => ({ id, quantity }));
+      updateBasketOnServer(updatedBasket);
     }
   };
 
@@ -79,6 +68,8 @@ const ProductDetails: React.FC = () => {
     if (product) {
       dispatch(removeFromBasket(product.id));
       setShowQuantityButtons(false);
+      const updatedBasket = store.getState().basket.items.map(({ id, quantity }) => ({ id, quantity }));
+      updateBasketOnServer(updatedBasket);
     }
   };
 
@@ -95,6 +86,28 @@ const ProductDetails: React.FC = () => {
   useEffect(() => {
     setShowQuantityButtons(quantityInBasket > 0);
   }, [quantityInBasket]);
+
+  const updateBasketOnServer = async (updatedBasket: { id: string; quantity: number }[]) => {
+    try {
+      const response = await fetch("https://skillfactory-task.detmir.team/cart/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedBasket),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Корзина успешно обновлена на сервере:", data);
+      } else {
+        const errorData = await response.json();
+        console.error("Ошибка при обновлении корзины на сервере:", errorData);
+      }
+    } catch (error) {
+      console.error("Ошибка при обновлении корзины на сервере:", error);
+    }
+  };
 
   if (status === "loading") {
     return <Loading />;
@@ -115,7 +128,7 @@ const ProductDetails: React.FC = () => {
           </p>
           <p className={styles.price}>{product.price} ₽</p>
           {showQuantityButtons ? (
-            <QuantitySelector quantity={quantityInBasket} isMinusClicked={false} isPlusClicked={false} handleMinusClick={handleMinusClick} handlePlusClick={handlePlusClick} handleRemoveClick={handleRemoveFromBasket} handlePlaceOrderClick={handlePlaceOrderClick} />
+            <QuantitySelector quantity={quantityInBasket} isMinusClicked={false} isPlusClicked={false} handleMinusClick={() => handleQuantityChange(false)} handlePlusClick={() => handleQuantityChange(true)} handleRemoveClick={handleRemoveFromBasket} handlePlaceOrderClick={handlePlaceOrderClick} />
           ) : (
             <button className={styles.button} onClick={handleAddToCartClick}>
               Добавить в корзину

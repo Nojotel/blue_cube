@@ -1,6 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, Reducer } from "@reduxjs/toolkit";
 import { Product } from "./productReducer";
 import { RootState } from "./store";
+import Cookies from "js-cookie";
 
 interface BasketItem extends Product {
   quantity: number;
@@ -37,6 +38,22 @@ const updateQuantity = (state: BasketState, productId: string, increment: boolea
   }
 };
 
+export const updateBasket = (state: BasketState, updatedBasket: { id: string; quantity: number }[]) => {
+  state.items = updatedBasket.map(({ id, quantity }) => {
+    const item = state.items.find((i) => i.id === id);
+    if (item) {
+      return { ...item, quantity };
+    } else {
+      const product = state.items.find((i) => i.id === id);
+      if (product) {
+        return { ...product, quantity };
+      } else {
+        throw new Error(`Товар с идентификатором ${id} не найден.`);
+      }
+    }
+  });
+};
+
 const basketSlice = createSlice({
   name: "basket",
   initialState,
@@ -66,12 +83,17 @@ const basketSlice = createSlice({
     decrementQuantity: (state, action: PayloadAction<string>) => {
       updateQuantity(state, action.payload, false);
     },
+    clearBasket: (state) => {
+      state.items = [];
+    },
   },
 });
 
-export const { addToBasket, removeFromBasket, incrementQuantity, decrementQuantity } = basketSlice.actions;
+export const { addToBasket, removeFromBasket, incrementQuantity, decrementQuantity, clearBasket } = basketSlice.actions;
 
-export default basketSlice.reducer;
+const basketReducer: Reducer<BasketState> = basketSlice.reducer;
+
+export default basketReducer;
 
 export const getQuantityInBasket = (state: RootState, productId: string) => {
   const item = state.basket.items.find((i) => i.id === productId);
@@ -81,3 +103,8 @@ export const getQuantityInBasket = (state: RootState, productId: string) => {
 export const getTotalPriceInBasket = (state: RootState) => {
   return state.basket.items.reduce((total, item) => total + item.price * item.quantity, 0);
 };
+
+const basketCookie = Cookies.get("basket");
+if (basketCookie) {
+  initialState.items = JSON.parse(basketCookie);
+}
