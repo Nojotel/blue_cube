@@ -17,6 +17,26 @@ const initialState: BasketState = {
 const MAX_TOTAL_COST = 10000;
 const MAX_ITEM_QUANTITY = 10;
 
+const updateQuantity = (state: BasketState, productId: string, increment: boolean) => {
+  const itemIndex = state.items.findIndex((i) => i.id === productId);
+  if (itemIndex !== -1) {
+    const item = state.items[itemIndex];
+    const totalCost = state.items.reduce((total, item) => total + item.price * item.quantity, 0);
+
+    if (increment) {
+      if (item.quantity < MAX_ITEM_QUANTITY && totalCost + item.price <= MAX_TOTAL_COST) {
+        item.quantity += 1;
+      }
+    } else {
+      if (item.quantity > 1) {
+        item.quantity -= 1;
+      } else {
+        item.quantity = 0;
+      }
+    }
+  }
+};
+
 const basketSlice = createSlice({
   name: "basket",
   initialState,
@@ -41,22 +61,10 @@ const basketSlice = createSlice({
       }
     },
     incrementQuantity: (state, action: PayloadAction<string>) => {
-      const item = state.items.find((i) => i.id === action.payload);
-      const totalCost = state.items.reduce((total, item) => total + item.price * item.quantity, 0);
-      if (item && item.quantity < MAX_ITEM_QUANTITY && totalCost + item.price <= MAX_TOTAL_COST) {
-        item.quantity += 1;
-      }
+      updateQuantity(state, action.payload, true);
     },
     decrementQuantity: (state, action: PayloadAction<string>) => {
-      const itemIndex = state.items.findIndex((i) => i.id === action.payload);
-      if (itemIndex !== -1) {
-        const item = state.items[itemIndex];
-        if (item.quantity > 1) {
-          item.quantity -= 1;
-        } else {
-          item.quantity = 0;
-        }
-      }
+      updateQuantity(state, action.payload, false);
     },
   },
 });
