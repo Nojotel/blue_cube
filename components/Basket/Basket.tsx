@@ -3,7 +3,7 @@ import styles from "./Basket.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
 import Image from "next/image";
-import { incrementQuantity, decrementQuantity, removeFromBasket, clearBasket, updateBasket } from "@/redux/basketReducer";
+import { incrementQuantity, decrementQuantity, removeFromBasket, clearBasket } from "@/redux/basketReducer";
 import QuantitySelector from "@/components/QuantitySelector/QuantitySelector";
 import Modal from "@/components/Modal/Modal";
 import Cookies from "js-cookie";
@@ -41,12 +41,6 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
   const basketItems = useSelector((state: RootState) => state.basket.items);
   const [showModal, setShowModal] = React.useState(false);
   const [isSending, setIsSending] = React.useState(false);
-
-  useEffect(() => {
-    const updatedBasket = basketItems.map(({ id, quantity }) => ({ id, quantity }));
-    Cookies.set("basket", JSON.stringify(updatedBasket));
-    updateBasketOnServer(updatedBasket);
-  }, [basketItems]);
 
   const handleContainerClick = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -104,29 +98,6 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
       console.error("Ошибка при отправке запроса:", error);
     } finally {
       setIsSending(false);
-    }
-  };
-
-  const updateBasketOnServer = async (updatedBasket: { id: string; quantity: number }[]) => {
-    try {
-      const response = await fetch("https://skillfactory-task.detmir.team/cart/update", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedBasket),
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Корзина успешно обновлена на сервере:", data);
-      } else {
-        const errorData = await response.json();
-        console.error("Ошибка при обновлении корзины на сервере:", errorData);
-      }
-    } catch (error) {
-      console.error("Ошибка при обновлении корзины на сервере:", error);
     }
   };
 
