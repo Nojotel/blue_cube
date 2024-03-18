@@ -6,7 +6,7 @@ import undo from "@/public/Undo.svg";
 import Loading from "@/app/loading";
 import NotFound from "@/app/loading";
 import { fetchProductDetails } from "@/redux/productDetailsReducer";
-import { addToBasket, incrementQuantity, decrementQuantity, getQuantityInBasket, removeFromBasket, updateBasket } from "@/redux/basketReducer";
+import { addToBasket, incrementQuantity, decrementQuantity, getQuantityInBasket, removeFromBasket } from "@/redux/basketReducer";
 import { GenerateStars } from "@/components/ProductCard/generateStars";
 import styles from "./ProductDetails.module.css";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -25,7 +25,7 @@ const ProductDetails: React.FC = () => {
   const product = useSelector((state: RootState) => state.productDetails.product) as Product | null;
   const status = useSelector((state: RootState) => state.productDetails.status);
   const quantityInBasket = useSelector((state: RootState) => (product ? getQuantityInBasket(state, product.id) : 0));
-  const [showQuantityButtons, setShowQuantityButtons] = React.useState(quantityInBasket > 0);
+  const [showQuantityButtons, setShowQuantityButtons] = useState(quantityInBasket > 0);
   const [showModal, setShowModal] = useState(false);
 
   const getTotalPriceInBasket = (state: RootState) => {
@@ -41,8 +41,7 @@ const ProductDetails: React.FC = () => {
       }
       setShowQuantityButtons(true);
       dispatch(addToBasket(product));
-      const updatedBasket = store.getState().basket.items.map(({ id, quantity }) => ({ id, quantity }));
-      updateBasketOnServer(updatedBasket);
+      updateBasketOnServer();
     }
   };
 
@@ -54,8 +53,7 @@ const ProductDetails: React.FC = () => {
         return;
       }
       increment ? dispatch(incrementQuantity(product.id)) : dispatch(decrementQuantity(product.id));
-      const updatedBasket = store.getState().basket.items.map(({ id, quantity }) => ({ id, quantity }));
-      updateBasketOnServer(updatedBasket);
+      updateBasketOnServer();
     }
   };
 
@@ -68,8 +66,7 @@ const ProductDetails: React.FC = () => {
     if (product) {
       dispatch(removeFromBasket(product.id));
       setShowQuantityButtons(false);
-      const updatedBasket = store.getState().basket.items.map(({ id, quantity }) => ({ id, quantity }));
-      updateBasketOnServer(updatedBasket);
+      updateBasketOnServer();
     }
   };
 
@@ -77,24 +74,16 @@ const ProductDetails: React.FC = () => {
     setShowModal(false);
   };
 
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchProductDetails(id as string));
-    }
-  }, [id, dispatch]);
-
-  useEffect(() => {
-    setShowQuantityButtons(quantityInBasket > 0);
-  }, [quantityInBasket]);
-
-  const updateBasketOnServer = async (updatedBasket: { id: string; quantity: number }[]) => {
+  const updateBasketOnServer = async () => {
     try {
+      const updatedBasket = store.getState().basket.items.map(({ id, quantity }) => ({ id, quantity }));
+
       const response = await fetch("https://skillfactory-task.detmir.team/cart/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedBasket),
+        body: JSON.stringify({ data: updatedBasket }),
         credentials: "include",
       });
 
@@ -109,6 +98,16 @@ const ProductDetails: React.FC = () => {
       console.error("Ошибка при обновлении корзины на сервере:", error);
     }
   };
+
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchProductDetails(id as string));
+    }
+  }, [id, dispatch]);
+
+  useEffect(() => {
+    setShowQuantityButtons(quantityInBasket > 0);
+  }, [quantityInBasket]);
 
   if (status === "loading") {
     return <Loading />;
