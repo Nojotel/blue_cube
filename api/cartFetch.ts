@@ -1,5 +1,5 @@
 import { Dispatch } from "redux";
-import { updateBasket } from "./basketReducer";
+import { updateBasket } from "../redux/basketReducer";
 
 export const fetchCartData = async (dispatch: Dispatch) => {
   try {

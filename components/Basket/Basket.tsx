@@ -7,9 +7,9 @@ import { incrementQuantity, decrementQuantity, removeFromBasket, clearBasket } f
 import QuantitySelector from "@/components/QuantitySelector/QuantitySelector";
 import Modal from "@/components/Modal/Modal";
 import Cookies from "js-cookie";
-import { updateBasketOnServer } from "@/redux/cartUpdate";
-import { submitCart } from "@/redux/cartSubmit";
-import { fetchCartData } from "@/redux/cartFetch";
+import { updateBasketOnServer } from "@/api/cartUpdate";
+import { submitCart } from "@/api/cartSubmit";
+import { fetchCartData } from "@/api/cartFetch";
 
 interface BasketItem {
   id: string;

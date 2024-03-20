@@ -15,7 +15,7 @@ import { setBasketOpen } from "@/redux/basketSlice";
 import QuantitySelector from "@/components/QuantitySelector/QuantitySelector";
 import Modal from "@/components/Modal/Modal";
 import store from "@/redux/store";
-import { updateBasketOnServer } from "@/redux/cartUpdate";
+import { updateBasketOnServer } from "@/api/cartUpdate";
 
 const MAX_TOTAL_COST = 10000;
 
