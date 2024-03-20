@@ -3,7 +3,7 @@ import styles from "./Basket.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
 import Image from "next/image";
-import { incrementQuantity, decrementQuantity, removeFromBasket, clearBasket, updateBasket } from "@/redux/basketReducer";
+import { incrementQuantity, decrementQuantity, removeFromBasket, clearBasket } from "@/redux/basketReducer";
 import QuantitySelector from "@/components/QuantitySelector/QuantitySelector";
 import Modal from "@/components/Modal/Modal";
 import Cookies from "js-cookie";
@@ -26,8 +26,9 @@ interface BasketProps {
 }
 
 const MAX_TOTAL_COST = 10000;
+const TITLE_MAX_LENGTH = 20;
 
-function trimTextToWholeWords(text: string, maxLength: number): string {
+const trimTextToWholeWords = (text: string, maxLength: number): string => {
   let trimmedText = text.substr(0, maxLength);
   if (trimmedText.length < text.length) {
     trimmedText = trimmedText.substr(0, Math.min(trimmedText.length, trimmedText.lastIndexOf(" ")));
@@ -37,7 +38,7 @@ function trimTextToWholeWords(text: string, maxLength: number): string {
     trimmedText = trimmedText.substr(0, trimmedText.lastIndexOf(" "));
   }
   return trimmedText;
-}
+};
 
 const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
   const dispatch = useDispatch();
@@ -48,10 +49,6 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
   useEffect(() => {
     fetchCartData(dispatch);
   }, [dispatch]);
-
-  const handleContainerClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-  };
 
   const handleQuantityChange = (productId: string, increment: boolean) => {
     const item = basketItems.find((item) => item.id === productId);
@@ -69,17 +66,11 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
     updateBasketOnServer();
   };
 
-  const calculateItemPrice = (item: BasketItem) => {
-    return item.price * item.quantity;
-  };
+  const calculateItemPrice = (item: BasketItem) => item.price * item.quantity;
 
-  const calculateTotalPrice = () => {
-    return basketItems.reduce((total, item) => total + calculateItemPrice(item), 0);
-  };
+  const calculateTotalPrice = () => basketItems.reduce((total, item) => total + calculateItemPrice(item), 0);
 
-  const closeModal = () => {
-    setShowModal(false);
-  };
+  const closeModal = () => setShowModal(false);
 
   const handleCheckoutClick = async () => {
     setIsSending(true);
@@ -99,12 +90,12 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
     <div onClick={() => onToggle(!isOpen)}>
       {children}
       {isOpen && (
-        <div className={styles.container} onClick={handleContainerClick}>
+        <div className={styles.container} onClick={(e) => e.stopPropagation()}>
           {basketItems.length > 0 ? (
             basketItems.map((item) => (
               <div key={item.id} className={styles.basketItem}>
                 <Image className={styles.image} src={item.picture} alt={item.title} width={50} height={50} />
-                <div className={styles.title}>{trimTextToWholeWords(item.title, 20)}</div>
+                <div className={styles.title}>{trimTextToWholeWords(item.title, TITLE_MAX_LENGTH)}</div>
                 <QuantitySelector quantity={item.quantity} isMinusClicked={false} isPlusClicked={false} handleMinusClick={() => handleQuantityChange(item.id, false)} handlePlusClick={() => handleQuantityChange(item.id, true)} handleRemoveClick={() => handleRemoveClick(item.id)} showOrderButton={false} />
                 {item.quantity > 0 && (
                   <div className={styles.price}>

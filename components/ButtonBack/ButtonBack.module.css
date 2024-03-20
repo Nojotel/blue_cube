@@ -3,10 +3,9 @@
   left: 2%;
 
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  width: 90px;
-  border: 0;
+  gap: 0.5rem;
+  border: none;
   background-color: transparent;
 
   margin-top: 25px;
@@ -14,10 +13,9 @@
   font-size: 16px;
   font-weight: 700;
   line-height: 20px;
-  letter-spacing: 0px;
-  text-align: center;
   cursor: pointer;
 }
+
 @media (max-width: 650px) {
   .button {
     left: 5%;

@@ -11,75 +11,81 @@
   background: rgb(255, 255, 255);
   z-index: 99;
 }
+
 .basketItem {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   width: 100%;
   height: auto;
-  padding: 16px 0px 16px 0px;
+  padding: 16px 0;
 }
+
 .image {
   width: 52px;
   height: 52px;
 }
+
 .title {
   padding: 16px;
   color: rgb(23, 32, 41);
   font-size: 16px;
   font-weight: 400;
   line-height: 20px;
-  letter-spacing: 0px;
   text-align: left;
   width: 200px;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
 .price {
   width: 112px;
   color: rgb(23, 32, 41);
   font-size: 20px;
   font-weight: 700;
   line-height: 24px;
-  letter-spacing: 0px;
   text-align: right;
 }
+
 .subPrice {
   color: rgb(128, 128, 128);
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
-  letter-spacing: 0px;
   text-align: right;
 }
+
 .none {
   color: rgb(23, 32, 41);
   font-size: 20px;
   font-weight: 700;
   line-height: 24px;
-  letter-spacing: 0px;
 }
+
 .totalPrice {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .totalPriceText {
   color: rgb(23, 32, 41);
   font-size: 20px;
   font-weight: 700;
   line-height: 24px;
-  letter-spacing: 0px;
   text-align: left;
 }
+
 .totalPriceValue {
   color: rgb(23, 32, 41);
   font-family: Circe Rounded DM, sans-serif;
   font-size: 28px;
   font-weight: 800;
   line-height: 32px;
-  letter-spacing: 0px;
   text-align: right;
 }
+
 .checkout {
   display: flex;
   justify-content: center;
@@ -92,34 +98,41 @@
   font-size: 16px;
   font-weight: 700;
   line-height: 20px;
-  letter-spacing: 0px;
   text-align: center;
-  border: 0;
+  border: none;
   margin-top: 16px;
+  cursor: pointer;
 }
+
 .checkout:hover {
   background: #338feb;
 }
+
 @media (max-width: 600px) {
   .container {
     width: 95%;
   }
+
   .basketItem {
     flex-direction: column;
   }
+
   .image {
     width: 152px;
     height: 152px;
   }
+
   .title {
     font-size: 25px;
     padding-left: 0;
   }
+
   .price {
     padding-top: 15px;
     text-align: center;
     font-size: 32px;
   }
+
   .subPrice {
     font-size: 16px;
     line-height: 33px;

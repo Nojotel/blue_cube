@@ -2,7 +2,7 @@ import React, { FC, MouseEvent } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import styles from "./ButtonBack.module.css";
-import left from "@/public/Left.svg";
+import leftIcon from "@/public/Left.svg";
 
 const ButtonBack: FC = () => {
   const router = useRouter();
@@ -14,8 +14,8 @@ const ButtonBack: FC = () => {
 
   return (
     <button className={styles.button} onClick={handleClick}>
-      <Image src={left} alt="Left" width={20} height={20} />
-      Назад
+      <Image src={leftIcon} alt="Left" width={20} height={20} />
+      <span>Назад</span>
     </button>
   );
 };
