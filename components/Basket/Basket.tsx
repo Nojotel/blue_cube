@@ -112,7 +112,7 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
             <span className={styles.totalPriceText}>Итого:</span>
             <span className={styles.totalPriceValue}>{calculateTotalPrice()} ₽</span>
           </div>
-          <button className={styles.checkout} onClick={handleCheckoutClick} disabled={isSending}>
+          <button className={`${styles.checkout} ${basketItems.length === 0 || isSending ? styles.disabled : ""}`} onClick={handleCheckoutClick} disabled={isSending || basketItems.length === 0}>
             {isSending ? "Отправка..." : "Оформить заказ"}
           </button>
           <Modal message="Корзина переполнена" isOpen={showModal} onClose={closeModal} />
