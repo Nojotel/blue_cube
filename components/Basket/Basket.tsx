@@ -7,6 +7,8 @@ import { incrementQuantity, decrementQuantity, removeFromBasket, clearBasket } f
 import QuantitySelector from "@/components/QuantitySelector/QuantitySelector";
 import Modal from "@/components/Modal/Modal";
 import Cookies from "js-cookie";
+import { updateBasketOnServer } from "@/redux/cartUpdate";
+import { submitCart } from "@/redux/cartSubmit";
 
 interface BasketItem {
   id: string;
@@ -54,10 +56,12 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
       return;
     }
     increment ? dispatch(incrementQuantity(productId)) : dispatch(decrementQuantity(productId));
+    updateBasketOnServer();
   };
 
   const handleRemoveClick = (productId: string) => {
     dispatch(removeFromBasket(productId));
+    updateBasketOnServer();
   };
 
   const calculateItemPrice = (item: BasketItem) => {
@@ -76,24 +80,9 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
     setIsSending(true);
 
     try {
-      const response = await fetch("https://skillfactory-task.detmir.team/cart/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(basketItems),
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Успешный ответ от сервера:", data);
-        dispatch(clearBasket());
-        Cookies.remove("basket");
-      } else {
-        const errorData = await response.json();
-        console.error("Ошибка при оформлении заказа:", errorData);
-      }
+      await submitCart(basketItems);
+      dispatch(clearBasket());
+      Cookies.remove("basket");
     } catch (error) {
       console.error("Ошибка при отправке запроса:", error);
     } finally {

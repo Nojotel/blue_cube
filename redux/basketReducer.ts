@@ -38,22 +38,6 @@ const updateQuantity = (state: BasketState, productId: string, increment: boolea
   }
 };
 
-export const updateBasket = (state: BasketState, updatedBasket: { id: string; quantity: number }[]) => {
-  state.items = updatedBasket.map(({ id, quantity }) => {
-    const item = state.items.find((i) => i.id === id);
-    if (item) {
-      return { ...item, quantity };
-    } else {
-      const product = state.items.find((i) => i.id === id);
-      if (product) {
-        return { ...product, quantity };
-      } else {
-        throw new Error(`Товар с идентификатором ${id} не найден.`);
-      }
-    }
-  });
-};
-
 const basketSlice = createSlice({
   name: "basket",
   initialState,

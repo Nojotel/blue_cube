@@ -15,6 +15,7 @@ import { setBasketOpen } from "@/redux/basketSlice";
 import QuantitySelector from "@/components/QuantitySelector/QuantitySelector";
 import Modal from "@/components/Modal/Modal";
 import store from "@/redux/store";
+import { updateBasketOnServer } from "@/redux/cartUpdate";
 
 const MAX_TOTAL_COST = 10000;
 
@@ -72,31 +73,6 @@ const ProductDetails: React.FC = () => {
 
   const closeModal = () => {
     setShowModal(false);
-  };
-
-  const updateBasketOnServer = async () => {
-    try {
-      const updatedBasket = store.getState().basket.items.map(({ id, quantity }) => ({ id, quantity }));
-
-      const response = await fetch("https://skillfactory-task.detmir.team/cart/update", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ data: updatedBasket }),
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Корзина успешно обновлена на сервере:", data);
-      } else {
-        const errorData = await response.json();
-        console.error("Ошибка при обновлении корзины на сервере:", errorData);
-      }
-    } catch (error) {
-      console.error("Ошибка при обновлении корзины на сервере:", error);
-    }
   };
 
   useEffect(() => {
