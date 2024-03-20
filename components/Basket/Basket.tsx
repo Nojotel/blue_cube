@@ -9,6 +9,7 @@ import Modal from "@/components/Modal/Modal";
 import Cookies from "js-cookie";
 import { updateBasketOnServer } from "@/redux/cartUpdate";
 import { submitCart } from "@/redux/cartSubmit";
+import { fetchCartData } from "@/redux/cartFetch";
 
 interface BasketItem {
   id: string;
@@ -45,33 +46,7 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
   const [isSending, setIsSending] = React.useState(false);
 
   useEffect(() => {
-    const fetchCartData = async () => {
-      try {
-        const response = await fetch("https://skillfactory-task.detmir.team/cart", {
-          method: "GET",
-          credentials: "include",
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          const items = data.map(({ product: { id, title, price, picture }, quantity }: { product: { id: string; title: string; price: number; picture: string }; quantity: number }) => ({
-            id,
-            title,
-            price,
-            quantity,
-            picture,
-          }));
-          dispatch(updateBasket(items));
-        } else {
-          const errorData = await response.json();
-          console.error("Ошибка при получении данных корзины:", errorData);
-        }
-      } catch (error) {
-        console.error("Ошибка при получении данных корзины:", error);
-      }
-    };
-
-    fetchCartData();
+    fetchCartData(dispatch);
   }, [dispatch]);
 
   const handleContainerClick = (event: React.MouseEvent) => {
