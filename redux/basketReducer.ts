@@ -22,7 +22,7 @@ const updateQuantity = (state: BasketState, productId: string, increment: boolea
   const itemIndex = state.items.findIndex((i) => i.id === productId);
   if (itemIndex !== -1) {
     const item = state.items[itemIndex];
-    const totalCost = state.items.reduce((total, item) => total + item.price * item.quantity, 0);
+    const totalCost = state.items.reduce((total: number, item: BasketItem) => total + item.price * item.quantity, 0);
 
     if (increment) {
       if (item.quantity < MAX_ITEM_QUANTITY && totalCost + item.price <= MAX_TOTAL_COST) {
@@ -32,7 +32,7 @@ const updateQuantity = (state: BasketState, productId: string, increment: boolea
       if (item.quantity > 1) {
         item.quantity -= 1;
       } else {
-        item.quantity = 0;
+        state.items.splice(itemIndex, 1); // Changed from setting quantity to 0 to removing item
       }
     }
   }
@@ -43,10 +43,11 @@ const basketSlice = createSlice({
   initialState,
   reducers: {
     addToBasket: (state, action: PayloadAction<Product>) => {
-      const totalCost = state.items.reduce((total, item) => total + item.price * item.quantity, 0);
+      const totalCost = state.items.reduce((total: number, item: BasketItem) => total + item.price * item.quantity, 0);
       if (totalCost + action.payload.price <= MAX_TOTAL_COST) {
-        const item = state.items.find((i) => i.id === action.payload.id);
-        if (item) {
+        const itemIndex = state.items.findIndex((i) => i.id === action.payload.id);
+        if (itemIndex !== -1) {
+          const item = state.items[itemIndex];
           if (item.quantity < MAX_ITEM_QUANTITY) {
             item.quantity += 1;
           }
@@ -70,22 +71,25 @@ const basketSlice = createSlice({
     clearBasket: (state) => {
       state.items = [];
     },
+    updateBasket: (state, action: PayloadAction<BasketItem[]>) => {
+      state.items = action.payload;
+    },
   },
 });
 
-export const { addToBasket, removeFromBasket, incrementQuantity, decrementQuantity, clearBasket } = basketSlice.actions;
+export const { addToBasket, removeFromBasket, incrementQuantity, decrementQuantity, clearBasket, updateBasket } = basketSlice.actions;
 
 const basketReducer: Reducer<BasketState> = basketSlice.reducer;
 
 export default basketReducer;
 
-export const getQuantityInBasket = (state: RootState, productId: string) => {
+export const getQuantityInBasket = (state: RootState, productId: string): number => {
   const item = state.basket.items.find((i) => i.id === productId);
   return item ? item.quantity : 0;
 };
 
-export const getTotalPriceInBasket = (state: RootState) => {
-  return state.basket.items.reduce((total, item) => total + item.price * item.quantity, 0);
+export const getTotalPriceInBasket = (state: RootState): number => {
+  return state.basket.items.reduce((total: number, item: BasketItem) => total + item.price * item.quantity, 0);
 };
 
 const basketCookie = Cookies.get("basket");
