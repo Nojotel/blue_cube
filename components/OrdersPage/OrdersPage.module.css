@@ -1,0 +1,74 @@
+.container {
+  margin: 0 auto;
+  width: 1280px;
+  height: 96px;
+  border-radius: 16px;
+  padding: 24px;
+  background: rgb(255, 255, 255);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.orderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.orderSubtitile {
+  color: rgb(128, 128, 128);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0px;
+  text-align: left;
+}
+
+.orderTitile {
+  color: rgb(23, 32, 41);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0px;
+  text-align: left;
+}
+
+.image {
+  width: 48px;
+  height: 48px;
+}
+
+.dateContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  flex-direction: column;
+}
+
+.dateContainerTitle {
+  color: rgb(23, 32, 41);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0px;
+  text-align: left;
+  margin-left: 8px;
+}
+
+.dateContainerSubtitle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 8px;
+  color: rgb(128, 128, 128);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0px;
+  text-align: right;
+}
