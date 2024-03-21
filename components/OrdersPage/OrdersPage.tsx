@@ -5,6 +5,7 @@ import { setOrders } from "@/redux/ordersReducer";
 import { RootState } from "@/redux/store";
 import styles from "./OrdersPage.module.css";
 import Image from "next/image";
+import Loading from "@/app/loading";
 
 interface Product {
   id: string;
@@ -50,7 +51,7 @@ const OrdersPage = () => {
   return (
     <div>
       {isLoading ? (
-        <p>Загрузка...</p>
+        <Loading />
       ) : orders.length > 0 ? (
         orders.map((order) => (
           <div key={order.id} className={styles.container}>
