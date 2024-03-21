@@ -24,7 +24,7 @@ interface Order {
 const OrdersPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
-  const orders = useSelector((state: RootState) => state.orders.orders as Order[]);
+  const orders = useSelector((state: RootState) => state.orders.orders);
 
   useEffect(() => {
     const getOrders = async () => {

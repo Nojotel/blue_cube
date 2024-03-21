@@ -1,12 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface Product {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  picture: string;
+}
+
 interface Order {
-  product: {
-    id: string;
-    title: string;
-  };
+  id: number;
   quantity: number;
   createdAt: string;
+  products: Product[];
 }
 
 interface OrdersState {
