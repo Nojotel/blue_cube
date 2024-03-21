@@ -107,3 +107,21 @@
 .moreButton:hover {
   background: #338feb;
 }
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    width: 80%;
+  }
+  .imageContainer {
+    position: relative;
+    left: 0;
+  }
+  .dateContainer {
+    align-items: center;
+  }
+}
+@media (max-width: 400px) {
+  .container {
+    width: 95%;
+  }
+}
