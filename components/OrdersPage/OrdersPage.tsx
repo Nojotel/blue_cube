@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { fetchOrders } from "@/api/ordersFetch";
 import { useDispatch, useSelector } from "react-redux";
 import { setOrders } from "@/redux/ordersReducer";
@@ -27,42 +27,49 @@ const OrdersPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [allOrders, setAllOrders] = useState<Order[]>([]);
   const dispatch = useDispatch();
   const orders = useSelector<RootState, Order[]>((state) => state.orders.orders);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let page = currentPage;
-        let orders: Order[] = [];
-        let hasMorePages = true;
+  const fetchData = useCallback(async () => {
+    try {
+      let page = 1;
+      let fetchedOrders: Order[] = [];
+      let hasMorePages = true;
 
-        while (hasMorePages) {
-          const response = await fetchOrders(10, page);
-          const offset = (page - 1) * 10;
-          const formattedOrders: Order[] = response.data.map((orderData: any[], index: number) => ({
-            id: index + offset + 1,
-            quantity: orderData.length,
-            createdAt: orderData[0].createdAt,
-            products: orderData.map((item: any) => item.product),
-          }));
-
-          orders = [...orders, ...formattedOrders];
-          hasMorePages = response.data.length === 10;
-          page++;
+      while (hasMorePages) {
+        const response = await fetchOrders(10, page);
+        if (response.data.length === 0) {
+          break;
         }
-
-        dispatch(setOrders(orders));
-        setTotalPages(page - 1);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
+        const offset = (page - 1) * 10;
+        const formattedOrders: Order[] = response.data.map((orderData: any[], index: number) => ({
+          id: index + offset + 1,
+          quantity: orderData.length,
+          createdAt: orderData[0].createdAt,
+          products: orderData.map((item: any) => item.product),
+        }));
+        fetchedOrders = [...fetchedOrders, ...formattedOrders];
+        hasMorePages = response.data.length === 10;
+        page++;
       }
-    };
+      setAllOrders(fetchedOrders);
+      setTotalPages(page - 1);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
+  useEffect(() => {
     fetchData();
-  }, [dispatch, currentPage]);
+  }, [fetchData]);
+
+  useEffect(() => {
+    const pageOrders = allOrders.slice((currentPage - 1) * 10, currentPage * 10);
+    dispatch(setOrders(pageOrders));
+  }, [dispatch, currentPage, allOrders]);
 
   const handlePageChange = (page: number) => {
     if (page >= 1) {
@@ -76,7 +83,7 @@ const OrdersPage = () => {
         <Loading />
       ) : orders.length > 0 ? (
         <>
-          {orders.slice((currentPage - 1) * 10, currentPage * 10).map((order) => (
+          {orders.map((order) => (
             <div key={order.id} className={styles.container}>
               <div className={styles.orderContainer}>
                 <div className={styles.orderSubtitle}>Заказ</div>

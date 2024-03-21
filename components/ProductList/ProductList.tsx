@@ -1,4 +1,3 @@
-// ProductList.tsx
 import React, { useEffect, useState, Dispatch, SetStateAction, useCallback } from "react";
 import ProductCard from "@/components/ProductCard/ProductCard";
 import Pagination from "@/components/Pagination/Pagination";
