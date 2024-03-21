@@ -55,8 +55,8 @@ const OrdersPage = () => {
         orders.map((order) => (
           <div key={order.id} className={styles.container}>
             <div className={styles.orderContainer}>
-              <div className={styles.orderSubtitile}>Заказ</div>
-              <div className={styles.orderTitile}>№{order.id}</div>
+              <div className={styles.orderSubtitle}>Заказ</div>
+              <div className={styles.orderTitle}>№{order.id}</div>
             </div>
             <div className={styles.imageContainer}>
               {order.products.map((product, index) => (

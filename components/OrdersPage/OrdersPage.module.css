@@ -20,7 +20,7 @@
   flex-direction: column;
 }
 
-.orderSubtitile {
+.orderSubtitle {
   color: rgb(128, 128, 128);
   font-size: 16px;
   font-weight: 700;
@@ -29,7 +29,7 @@
   text-align: left;
 }
 
-.orderTitile {
+.orderTitle {
   color: rgb(23, 32, 41);
   font-size: 20px;
   font-weight: 700;
