@@ -80,3 +80,11 @@
   letter-spacing: 0px;
   text-align: right;
 }
+.none {
+  color: rgb(23, 32, 41);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0px;
+  text-align: left;
+}

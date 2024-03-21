@@ -76,7 +76,7 @@ const OrdersPage = () => {
           </div>
         ))
       ) : (
-        <p>Заказы не найдены.</p>
+        <p className={styles.none}>Заказы не найдены.</p>
       )}
     </div>
   );
