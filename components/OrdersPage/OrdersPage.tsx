@@ -18,7 +18,7 @@ interface Order {
   id: number;
   quantity: number;
   createdAt: string;
-  product: Product;
+  products: Product[];
 }
 
 const OrdersPage = () => {
@@ -30,9 +30,11 @@ const OrdersPage = () => {
     const getOrders = async () => {
       try {
         const response = await fetchOrders(10, 1);
-        const formattedOrders = response.data.flat().map((order: any, index: number) => ({
-          ...order,
+        const formattedOrders = response.data.map((orderData: any, index: number) => ({
           id: index + 1,
+          quantity: orderData.length,
+          createdAt: orderData[0].createdAt,
+          products: orderData.map((item: any) => item.product),
         }));
         dispatch(setOrders(formattedOrders));
       } catch (error) {
@@ -56,15 +58,19 @@ const OrdersPage = () => {
               <div className={styles.orderSubtitile}>Заказ</div>
               <div className={styles.orderTitile}>№{order.id}</div>
             </div>
-            <div className={styles.image}>
-              <Image src={order.product.picture} alt={order.product.title} width={48} height={48} layout="responsive" />
+            <div className={styles.imageContainer}>
+              {order.products.map((product, index) => (
+                <div key={index} className={styles.image}>
+                  <Image src={product.picture} alt={product.title} width={48} height={48} layout="responsive" />
+                </div>
+              ))}
             </div>
             <div className={styles.dateContainer}>
               <div className={styles.dateContainerSubtitle}>
                 Оформлено <div className={styles.dateContainerTitle}>{new Date(order.createdAt).toLocaleDateString()}</div>
               </div>
               <div className={styles.dateContainerSubtitle}>
-                На сумму <div className={styles.dateContainerTitle}>{order.quantity * order.product.price} ₽</div>
+                На сумму <div className={styles.dateContainerTitle}>{order.products.reduce((total, product) => total + product.price, 0)} ₽</div>
               </div>
             </div>
           </div>
