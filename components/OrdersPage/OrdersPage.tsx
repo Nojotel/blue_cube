@@ -66,7 +66,6 @@ const OrdersPage = () => {
 
   const handlePageChange = (page: number) => {
     if (page >= 1) {
-      // Добавляем проверку на отрицательное значение страницы
       setCurrentPage(page);
     }
   };
@@ -86,7 +85,7 @@ const OrdersPage = () => {
               <div className={styles.imageContainer}>
                 {order.products.map((product, index) => (
                   <div key={index} className={styles.image}>
-                    <Image src={product.picture} alt={product.title} width={48} height={48} layout="responsive" />
+                    <Image src={product.picture} alt={product.title} width={48} height={48} />
                   </div>
                 ))}
               </div>
