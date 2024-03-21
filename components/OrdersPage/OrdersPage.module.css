@@ -6,6 +6,7 @@
   padding: 24px;
   background: rgb(255, 255, 255);
 
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -39,8 +40,11 @@
 .imageContainer {
   display: flex;
   justify-content: center;
+  position: absolute;
   align-items: flex-start;
+  left: 10%;
 }
+
 .image {
   width: 48px;
   height: 48px;
