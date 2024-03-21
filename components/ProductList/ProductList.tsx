@@ -77,7 +77,7 @@ const ProductList = () => {
   return (
     <div className={styles.container}>
       <ProductCard setPage={setPage} page={page} hasHydrated={hasHydrated} />
-      <Pagination setPage={setPage} page={page} totalPages={status === "loading" ? 1 : 10} />
+      {status !== "loading" && <Pagination setPage={setPage} page={page} totalPages={10} />}
     </div>
   );
 };
