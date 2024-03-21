@@ -1,3 +1,4 @@
+// ProductList.tsx
 import React, { useEffect, useState, Dispatch, SetStateAction, useCallback } from "react";
 import ProductCard from "@/components/ProductCard/ProductCard";
 import Pagination from "@/components/Pagination/Pagination";
@@ -77,7 +78,7 @@ const ProductList = () => {
   return (
     <div className={styles.container}>
       <ProductCard setPage={setPage} page={page} hasHydrated={hasHydrated} />
-      <Pagination setPage={setPage} page={page} />
+      <Pagination setPage={setPage} page={page} totalPages={status === "loading" ? 1 : 10} />
     </div>
   );
 };

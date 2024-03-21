@@ -4,11 +4,9 @@ export const fetchOrders = async (limit: number, page: number) => {
       method: "GET",
       credentials: "include",
     });
-
     if (!response.ok) {
       throw new Error("Ошибка при получении заказов");
     }
-
     const orders = await response.json();
     return orders;
   } catch (error) {
