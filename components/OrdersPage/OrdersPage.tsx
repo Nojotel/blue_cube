@@ -72,6 +72,7 @@ const OrdersPage = () => {
               <div className={styles.dateContainerSubtitle}>
                 На сумму <div className={styles.dateContainerTitle}>{order.products.reduce((total, product) => total + product.price, 0)} ₽</div>
               </div>
+              <button className={styles.moreButton}>Заказать ещё</button>
             </div>
           </div>
         ))
