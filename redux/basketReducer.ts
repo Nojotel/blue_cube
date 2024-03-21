@@ -32,7 +32,7 @@ const updateQuantity = (state: BasketState, productId: string, increment: boolea
       if (item.quantity > 1) {
         item.quantity -= 1;
       } else {
-        state.items.splice(itemIndex, 1); // Changed from setting quantity to 0 to removing item
+        state.items.splice(itemIndex, 1);
       }
     }
   }
