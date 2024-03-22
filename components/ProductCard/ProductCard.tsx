@@ -8,6 +8,14 @@ import Loading from "@/app/loading";
 import { GenerateStars } from "./generateStars";
 import { AppDispatch, RootState } from "@/redux/store";
 
+interface Product {
+  id: string;
+  picture: string;
+  title: string;
+  rating: number;
+  price: number;
+}
+
 interface ProductCardProps {
   setPage: (page: number) => void;
   page: number;
@@ -17,7 +25,7 @@ interface ProductCardProps {
 const selectProducts = (state: RootState) => state.product.products;
 const selectStatus = (state: RootState) => state.product.status;
 
-const ProductCard: React.FC<ProductCardProps> = ({ setPage, page, hasHydrated }) => {
+const ProductCard: React.FC<ProductCardProps> = React.memo(({ setPage, page, hasHydrated }) => {
   const dispatch = useDispatch<AppDispatch>();
   const products = useSelector(selectProducts);
   const status = useSelector(selectStatus);
@@ -41,7 +49,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ setPage, page, hasHydrated })
 
   return (
     <div className={styles.grid}>
-      {products.map((product: any) => (
+      {products.map((product: Product) => (
         <Link key={product.id} href={`/products/${product.id}`}>
           <div className={styles.container}>
             <Image className={styles.image} src={product.picture} alt={product.title} width={240} height={240} priority />
@@ -55,6 +63,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ setPage, page, hasHydrated })
       ))}
     </div>
   );
-};
+});
+
+ProductCard.displayName = "ProductCard";
 
 export default ProductCard;

@@ -74,6 +74,8 @@ const Header: FC = () => {
       <Head>
         <title>Синий куб</title>
         <meta name="description" content="Магазин детских товаров" />
+        <link rel="preconnect" href="https://detmir.team" />
+        <link rel="preconnect" href="https://skillfactory-task.detmir.team" />
       </Head>
       <nav className={styles.navigation}>
         <Image className={styles.logo} src={logoSrc} alt="Logo" width={150} height={24} priority />
