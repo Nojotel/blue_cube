@@ -44,9 +44,9 @@ const useScrollPosition = (initialPage: number): [number, Dispatch<SetStateActio
 
 const ProductList = () => {
   const [hasHydrated, setHasHydrated] = useState(false);
-  const initialPage = typeof window !== "undefined" ? Number(localStorage.getItem("page")) || 1 : 1;
-  const [page, setPage] = useScrollPosition(initialPage);
   const [isClient, setIsClient] = useState(false);
+  const initialPage = typeof window !== "undefined" ? Number(localStorage.getItem("productListPage")) || 1 : 1;
+  const [page, setPage] = useScrollPosition(initialPage);
 
   const dispatch = useDispatch<AppDispatch>();
   const products = useSelector(selectProducts);
@@ -70,6 +70,12 @@ const ProductList = () => {
     }
   }, [hasHydrated, isClient, page, dispatchFetchProducts]);
 
+  useEffect(() => {
+    if (isClient) {
+      localStorage.setItem("productListPage", page.toString());
+    }
+  }, [page, isClient]);
+
   if (!isClient) {
     return null;
   }
@@ -77,7 +83,7 @@ const ProductList = () => {
   return (
     <div className={styles.container}>
       <ProductCard setPage={setPage} page={page} hasHydrated={hasHydrated} />
-      {status !== "loading" && <Pagination setPage={setPage} page={page} totalPages={10} />}
+      {status !== "loading" && <Pagination setPage={setPage} page={page} totalPages={10} storageKey="productListPage" />}
     </div>
   );
 };

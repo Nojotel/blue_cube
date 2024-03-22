@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from "react";
 import styles from "./Pagination.module.css";
-import Image from "next/legacy/image";
+import Image from "next/image"; // Changed from 'next/legacy/image'
 import leftIcon from "@/public/Left.svg";
 import rightIcon from "@/public/Right.svg";
 import leftActiveIcon from "@/public/LeftActive.svg";
@@ -10,17 +10,18 @@ interface PaginationProps {
   setPage: (page: number) => void;
   page: number;
   totalPages: number;
+  storageKey: string; // Added storageKey prop
 }
 
-const Pagination: FC<PaginationProps> = ({ setPage, page, totalPages }) => {
+const Pagination: FC<PaginationProps> = ({ setPage, page, totalPages, storageKey }) => {
   const [isLeftClicked, setIsLeftClicked] = useState(false);
   const [isRightClicked, setIsRightClicked] = useState(false);
   const [visiblePages, setVisiblePages] = useState(5);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("page", page.toString());
-  }, [page]);
+    localStorage.setItem(storageKey, page.toString()); // Used the storage key
+  }, [page, storageKey]); // Added storageKey to dependency array
 
   useEffect(() => {
     const updateVisiblePages = () => {

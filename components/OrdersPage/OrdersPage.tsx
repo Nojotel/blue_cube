@@ -25,7 +25,12 @@ interface Order {
 
 const OrdersPage = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(() => {
+    if (typeof window !== "undefined") {
+      return Number(localStorage.getItem("ordersPage")) || 1;
+    }
+    return 1;
+  });
   const [totalPages, setTotalPages] = useState(1);
   const [allOrders, setAllOrders] = useState<Order[]>([]);
   const dispatch = useDispatch();
@@ -71,6 +76,12 @@ const OrdersPage = () => {
     dispatch(setOrders(pageOrders));
   }, [dispatch, currentPage, allOrders]);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("ordersPage", currentPage.toString());
+    }
+  }, [currentPage]);
+
   const handlePageChange = (page: number) => {
     if (page >= 1) {
       setCurrentPage(page);
@@ -107,7 +118,7 @@ const OrdersPage = () => {
               </div>
             </div>
           ))}
-          <Pagination setPage={handlePageChange} page={currentPage} totalPages={totalPages} />
+          <Pagination setPage={handlePageChange} page={currentPage} totalPages={totalPages} storageKey="ordersPage" />
         </>
       ) : (
         <p className={styles.none}>Заказы не найдены.</p>
