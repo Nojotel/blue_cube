@@ -1,5 +1,6 @@
 import React, { FC, useState, useEffect, MouseEvent, useCallback } from "react";
 import Image from "next/image";
+import Head from "next/head";
 import styles from "./Header.module.css";
 import logo from "@/public/logo.svg";
 import basket from "@/public/basket.svg";
@@ -70,6 +71,10 @@ const Header: FC = () => {
 
   return (
     <header className={styles.container}>
+      <Head>
+        <title>Синий куб</title>
+        <meta name="description" content="Магазин детских товаров" />
+      </Head>
       <nav className={styles.navigation}>
         <Image className={styles.logo} src={logoSrc} alt="Logo" width={150} height={24} priority />
         <ul className={styles.links}>
