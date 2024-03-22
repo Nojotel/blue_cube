@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from "react";
 import styles from "./Pagination.module.css";
-import Image from "next/image"; // Changed from 'next/legacy/image'
+import Image from "next/image";
 import leftIcon from "@/public/Left.svg";
 import rightIcon from "@/public/Right.svg";
 import leftActiveIcon from "@/public/LeftActive.svg";
@@ -10,7 +10,7 @@ interface PaginationProps {
   setPage: (page: number) => void;
   page: number;
   totalPages: number;
-  storageKey: string; // Added storageKey prop
+  storageKey: string;
 }
 
 const Pagination: FC<PaginationProps> = ({ setPage, page, totalPages, storageKey }) => {
@@ -20,8 +20,8 @@ const Pagination: FC<PaginationProps> = ({ setPage, page, totalPages, storageKey
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem(storageKey, page.toString()); // Used the storage key
-  }, [page, storageKey]); // Added storageKey to dependency array
+    localStorage.setItem(storageKey, page.toString());
+  }, [page, storageKey]);
 
   useEffect(() => {
     const updateVisiblePages = () => {
