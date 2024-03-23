@@ -7,7 +7,6 @@ import { RootState } from "@/redux/store";
 import { Product } from "@/redux/productReducer";
 import Modal from "@/components/Modal/Modal";
 import { updateBasketOnServer } from "@/api/cartUpdate";
-
 interface BasketModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -15,19 +14,15 @@ interface BasketModalProps {
   onAction1: () => void;
   onAction2: () => void;
 }
-
 const MAX_TOTAL_COST = 10000;
-
 const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, onAction1, onAction2 }) => {
   const dispatch = useDispatch();
   const basketItems = useSelector((state: RootState) => state.basket.items);
   const [showModal, setShowModal] = React.useState(false);
-
   const handleCloseBasket = () => {
     onClose();
     setShowModal(false);
   };
-
   const handleMergeOrders = () => {
     const canMergeOrders = isTotalCostAllowed(newOrder);
     if (canMergeOrders) {
@@ -40,7 +35,6 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, on
       setShowModal(true);
     }
   };
-
   const handleCreateNewOrder = () => {
     dispatch(clearBasket());
     dispatch(addToBasket(newOrder));
@@ -49,15 +43,12 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, on
     setTimeout(() => dispatch(setBasketOpen(true)), 3000);
     updateBasketOnServer();
   };
-
   const isTotalCostAllowed = (newOrder: Product[]) => {
     const totalCost = basketItems.reduce((total, item) => total + item.price * item.quantity, 0);
     const newTotalCost = newOrder.reduce((total, product) => total + product.price, totalCost);
     return newTotalCost <= MAX_TOTAL_COST;
   };
-
   if (!isOpen) return null;
-
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -76,5 +67,5 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, on
     </div>
   );
 };
-
 export default BasketModal;
+/////

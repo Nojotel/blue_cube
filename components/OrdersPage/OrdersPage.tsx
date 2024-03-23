@@ -17,7 +17,7 @@ interface Product {
   price: number;
   picture: string;
   rating: number;
-  quantity: number; // Добавьте это
+  quantity: number;
 }
 
 interface Order {
@@ -104,17 +104,20 @@ const OrdersPage: React.FC = () => {
     setSelectedOrder(null);
   };
 
-  const handleCreateNewOrder = (order: Order) => {
-    dispatch(clearBasket());
-
+  const handleMergeOrders = (order: Order) => {
     order.products.forEach((product) => {
-      dispatch(addToBasket([product]));
+      for (let i = 0; i < product.quantity; i++) {
+        dispatch(addToBasket([product]));
+      }
     });
   };
 
-  const handleMergeOrders = (order: Order) => {
+  const handleCreateNewOrder = (order: Order) => {
+    dispatch(clearBasket());
     order.products.forEach((product) => {
-      dispatch(addToBasket([product]));
+      for (let i = 0; i < product.quantity; i++) {
+        dispatch(addToBasket([product]));
+      }
     });
   };
 
