@@ -10,12 +10,13 @@ import Loading from "@/app/loading";
 import Pagination from "@/components/Pagination/Pagination";
 import BasketModal from "@/components/BasketModal/BasketModal";
 import { Product } from "@/redux/productReducer";
+import store from "@/redux/store";
 
 interface Order {
   id: number;
-  quantity: number;
   createdAt: string;
   products: ProductWithQuantity[];
+  quantity: number;
 }
 
 interface ProductWithQuantity extends Product {
@@ -27,26 +28,21 @@ const MAX_TOTAL_COST = 10000;
 const OrdersPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(() => {
-    if (typeof window !== "undefined") {
-      return Number(localStorage.getItem("ordersPage")) || 1;
-    }
-    return 1;
+    return typeof window !== "undefined" ? Number(localStorage.getItem("ordersPage")) || 1 : 1;
   });
   const [totalPages, setTotalPages] = useState(1);
   const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-
   const dispatch = useDispatch();
-
   const orders = useSelector<RootState, Order[]>((state) => state.orders.orders);
-  const basketTotalCost = useSelector<RootState, number>(getTotalPriceInBasket);
 
   const fetchData = useCallback(async () => {
     try {
       let page = 1;
       let fetchedOrders: Order[] = [];
       let hasMorePages = true;
+
       while (hasMorePages) {
         const response = await fetchOrders(10, page);
         if (response.data.length === 0) {
@@ -55,9 +51,9 @@ const OrdersPage: React.FC = () => {
         const offset = (page - 1) * 10;
         const formattedOrders: Order[] = response.data.map((orderData: any[], index: number) => ({
           id: index + offset + 1,
-          quantity: orderData.length,
           createdAt: response.data[0][0].createdAt,
           products: orderData.map((item: any) => ({ ...item.product, quantity: item.quantity })),
+          quantity: orderData.length,
         }));
         fetchedOrders = [...fetchedOrders, ...formattedOrders];
         hasMorePages = response.data.length === 10;
@@ -105,8 +101,10 @@ const OrdersPage: React.FC = () => {
 
   const handleMergeOrders = (order: Order) => {
     const newItems: ProductWithQuantity[] = order.products;
+    const currentTotalCost = getTotalPriceInBasket(store.getState());
     const orderTotalCost = newItems.reduce((total, item) => total + item.price * item.quantity, 0);
-    if (basketTotalCost + orderTotalCost <= MAX_TOTAL_COST) {
+
+    if (currentTotalCost + orderTotalCost <= MAX_TOTAL_COST) {
       dispatch(addToBasket(newItems));
       handleCloseModal();
     } else {

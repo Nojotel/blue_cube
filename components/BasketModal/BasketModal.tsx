@@ -12,16 +12,19 @@ interface BasketModalProps {
   isOpen: boolean;
   onClose: () => void;
   newOrder: Product[];
-  onAction1: (newItems: Product[]) => void;
-  onAction2: (newItems: Product[]) => void;
+  onAction1: (order: Order) => void;
+  onAction2: (order: Order) => void;
 }
 
 const MAX_TOTAL_COST = 10000;
 
+interface Order {
+  products: Product[];
+}
+
 const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, onAction1, onAction2 }) => {
   const dispatch = useDispatch();
   const basketItems = useSelector((state: RootState) => state.basket.items);
-
   const [showModal, setShowModal] = React.useState(false);
 
   const handleCloseBasket = () => {
@@ -30,40 +33,32 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, on
   };
 
   const handleMergeOrders = () => {
-    const newItems: Product[] = [];
-    let totalCost = 0;
-
-    newOrder.forEach((product) => {
-      const quantityToAdd = product.quantity || 1;
-      for (let i = 0; i < quantityToAdd; i++) {
-        newItems.push(product);
-        totalCost += product.price;
-      }
-    });
-
-    if (totalCost + basketItems.reduce((total, item) => total + item.price * item.quantity, 0) <= MAX_TOTAL_COST) {
-      dispatch(addToBasket(newItems));
+    const order: Order = { products: newOrder };
+    const canMergeOrders = isTotalCostAllowed(order);
+    if (canMergeOrders) {
+      order.products.forEach((product) => {
+        for (let i = 0; i < product.quantity; i++) {
+          dispatch(addToBasket([product]));
+        }
+      });
+      handleCloseBasket();
       setTimeout(() => dispatch(setBasketOpen(true)), 3000);
       updateBasketOnServer();
-      onAction1(newItems);
     } else {
       setShowModal(true);
     }
   };
 
   const handleCreateNewOrder = () => {
-    const newItems: Product[] = [];
-    newOrder.forEach((product) => {
-      const quantityToAdd = product.quantity || 1;
-      for (let i = 0; i < quantityToAdd; i++) {
-        newItems.push(product);
-      }
-    });
-    dispatch(clearBasket());
-    newItems.forEach((product) => dispatch(addToBasket([product])));
+    const order: Order = { products: newOrder };
+    onAction2(order);
     setTimeout(() => dispatch(setBasketOpen(true)), 3000);
     updateBasketOnServer();
-    onAction2(newItems);
+  };
+  const isTotalCostAllowed = (order: Order) => {
+    const totalCost = basketItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    const newTotalCost = order.products.reduce((total, product) => total + product.price * product.quantity, totalCost);
+    return newTotalCost <= MAX_TOTAL_COST;
   };
 
   if (!isOpen) return null;
