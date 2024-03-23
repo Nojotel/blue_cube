@@ -2,11 +2,13 @@ import React, { useEffect, useState, useCallback } from "react";
 import { fetchOrders } from "@/api/ordersFetch";
 import { useDispatch, useSelector } from "react-redux";
 import { setOrders } from "@/redux/ordersReducer";
+import { clearBasket, addToBasket } from "@/redux/basketReducer";
 import { RootState } from "@/redux/store";
 import styles from "./OrdersPage.module.css";
 import Image from "next/image";
 import Loading from "@/app/loading";
 import Pagination from "@/components/Pagination/Pagination";
+import BasketModal from "@/components/BasketModal/BasketModal";
 
 interface Product {
   id: string;
@@ -14,6 +16,7 @@ interface Product {
   description: string;
   price: number;
   picture: string;
+  rating: number;
 }
 
 interface Order {
@@ -33,6 +36,8 @@ const OrdersPage = () => {
   });
   const [totalPages, setTotalPages] = useState(1);
   const [allOrders, setAllOrders] = useState<Order[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const dispatch = useDispatch();
   const orders = useSelector<RootState, Order[]>((state) => state.orders.orders);
 
@@ -88,6 +93,30 @@ const OrdersPage = () => {
     }
   };
 
+  const handleOrderMoreClick = (order: Order) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedOrder(null);
+  };
+
+  const handleCreateNewOrder = (order: Order) => {
+    dispatch(clearBasket());
+
+    order.products.forEach((product) => {
+      dispatch(addToBasket(product));
+    });
+  };
+
+  const handleMergeOrders = (order: Order) => {
+    order.products.forEach((product) => {
+      dispatch(addToBasket(product));
+    });
+  };
+
   return (
     <div>
       {isLoading ? (
@@ -114,7 +143,9 @@ const OrdersPage = () => {
                 <div className={styles.dateContainerSubtitle}>
                   На сумму <div className={styles.dateContainerTitle}>{order.products.reduce((total, product) => total + product.price, 0)} ₽</div>
                 </div>
-                <button className={styles.moreButton}>Заказать ещё</button>
+                <button className={styles.moreButton} onClick={() => handleOrderMoreClick(order)}>
+                  Заказать ещё
+                </button>
               </div>
             </div>
           ))}
@@ -123,6 +154,7 @@ const OrdersPage = () => {
       ) : (
         <p className={styles.none}>Заказы не найдены.</p>
       )}
+      {isModalOpen && selectedOrder && <BasketModal message="Что вы хотите сделать?" isOpen={isModalOpen} onClose={handleCloseModal} onAction1={() => handleMergeOrders(selectedOrder)} onAction2={() => handleCreateNewOrder(selectedOrder)} />}
     </div>
   );
 };

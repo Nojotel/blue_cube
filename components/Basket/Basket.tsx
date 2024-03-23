@@ -50,11 +50,13 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
     fetchCartData(dispatch);
   }, [dispatch]);
 
-  const handleQuantityChange = (productId: string, increment: boolean) => {
+  const handleQuantityChange = (productId: string, increment: boolean, isFromModal: boolean = false) => {
     const item = basketItems.find((item) => item.id === productId);
     const totalCost = calculateTotalPrice() + (increment ? item?.price || 0 : -(item?.price || 0));
     if (totalCost > MAX_TOTAL_COST) {
-      setShowModal(true);
+      if (!isFromModal) {
+        setShowModal(true);
+      }
       return;
     }
     increment ? dispatch(incrementQuantity(productId)) : dispatch(decrementQuantity(productId));
@@ -68,7 +70,7 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
 
   const calculateItemPrice = (item: BasketItem) => item.price * item.quantity;
 
-  const calculateTotalPrice = () => basketItems.reduce((total, item) => total + calculateItemPrice(item), 0);
+  const calculateTotalPrice = (items: BasketItem[] = basketItems) => items.reduce((total, item) => total + calculateItemPrice(item), 0);
 
   const closeModal = () => setShowModal(false);
 

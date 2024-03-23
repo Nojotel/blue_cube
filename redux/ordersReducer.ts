@@ -6,6 +6,7 @@ interface Product {
   description: string;
   price: number;
   picture: string;
+  rating: number;
 }
 
 interface Order {
@@ -34,4 +35,5 @@ const ordersSlice = createSlice({
 });
 
 export const { setOrders } = ordersSlice.actions;
+
 export default ordersSlice.reducer;
