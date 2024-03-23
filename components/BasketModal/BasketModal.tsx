@@ -22,13 +22,13 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, onAction1, o
   const handleAction1 = () => {
     onAction1();
     onClose();
-    dispatch(setBasketOpen(true)); // Устанавливаем состояние корзины как открытое
+    dispatch(setBasketOpen(true));
   };
 
   const handleAction2 = () => {
     onAction2();
     onClose();
-    dispatch(setBasketOpen(true)); // Устанавливаем состояние корзины как открытое
+    dispatch(setBasketOpen(true));
   };
 
   if (!isOpen) return null;
