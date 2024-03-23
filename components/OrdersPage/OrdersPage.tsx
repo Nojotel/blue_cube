@@ -17,6 +17,7 @@ interface Product {
   price: number;
   picture: string;
   rating: number;
+  quantity: number; // Добавьте это
 }
 
 interface Order {
@@ -26,7 +27,7 @@ interface Order {
   products: Product[];
 }
 
-const OrdersPage = () => {
+const OrdersPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(() => {
     if (typeof window !== "undefined") {
@@ -56,8 +57,8 @@ const OrdersPage = () => {
         const formattedOrders: Order[] = response.data.map((orderData: any[], index: number) => ({
           id: index + offset + 1,
           quantity: orderData.length,
-          createdAt: orderData[0].createdAt,
-          products: orderData.map((item: any) => item.product),
+          createdAt: response.data[0][0].createdAt,
+          products: orderData.map((item: any) => ({ ...item.product, quantity: item.quantity })),
         }));
         fetchedOrders = [...fetchedOrders, ...formattedOrders];
         hasMorePages = response.data.length === 10;
@@ -141,7 +142,7 @@ const OrdersPage = () => {
                   Оформлено <div className={styles.dateContainerTitle}>{new Date(order.createdAt).toLocaleDateString()}</div>
                 </div>
                 <div className={styles.dateContainerSubtitle}>
-                  На сумму <div className={styles.dateContainerTitle}>{order.products.reduce((total, product) => total + product.price, 0)} ₽</div>
+                  На сумму <div className={styles.dateContainerTitle}>{order.products.reduce((total, product) => total + product.price * product.quantity, 0)} ₽</div>
                 </div>
                 <button className={styles.moreButton} onClick={() => handleOrderMoreClick(order)}>
                   Заказать ещё

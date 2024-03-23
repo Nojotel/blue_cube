@@ -7,6 +7,7 @@ interface Product {
   price: number;
   picture: string;
   rating: number;
+  quantity: number;
 }
 
 interface Order {
