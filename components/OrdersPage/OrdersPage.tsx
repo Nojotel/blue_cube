@@ -2,8 +2,9 @@ import React, { useEffect, useState, useCallback } from "react";
 import { fetchOrders } from "@/api/ordersFetch";
 import { useDispatch, useSelector } from "react-redux";
 import { setOrders } from "@/redux/ordersReducer";
-import { clearBasket, addToBasket } from "@/redux/basketReducer";
+import { clearBasket, addToBasket, getQuantityInBasket } from "@/redux/basketReducer";
 import { RootState } from "@/redux/store";
+import store from "@/redux/store";
 import styles from "./OrdersPage.module.css";
 import Image from "next/image";
 import Loading from "@/app/loading";
@@ -106,8 +107,11 @@ const OrdersPage: React.FC = () => {
 
   const handleMergeOrders = (order: Order) => {
     order.products.forEach((product) => {
+      const quantityInBasket = getQuantityInBasket(store.getState(), product.id);
       for (let i = 0; i < product.quantity; i++) {
-        dispatch(addToBasket([product]));
+        if (i >= quantityInBasket) {
+          dispatch(addToBasket([product]));
+        }
       }
     });
   };

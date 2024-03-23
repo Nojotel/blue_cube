@@ -8,6 +8,7 @@ export interface Product {
   description: string;
   price: number;
   rating: number;
+  quantity: number;
 }
 
 interface ProductState {
