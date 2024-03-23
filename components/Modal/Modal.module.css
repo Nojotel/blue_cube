@@ -14,7 +14,7 @@
 
 .modalContent {
   background-color: #fefefe;
-  padding: 20px;
+  padding: 70px 140px;
   border: 1px solid #888;
   border-radius: 10px;
 }
@@ -22,4 +22,12 @@
 .modalMessage {
   font-size: 25px;
   color: #333;
+}
+@media (max-width: 500px) {
+  .modalContent {
+    padding: 100px 80px;
+  }
+  .modalMessage {
+    font-size: 35px;
+  }
 }

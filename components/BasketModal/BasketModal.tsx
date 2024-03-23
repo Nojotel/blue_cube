@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./BasketModal.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { clearBasket, addToBasket } from "@/redux/basketReducer";
@@ -22,7 +22,7 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, on
   const basketItems = useSelector((state: RootState) => state.basket.items);
   const [showModal, setShowModal] = React.useState(false);
 
-  const handleClose = () => {
+  const handleCloseBasket = () => {
     onClose();
     setShowModal(false);
   };
@@ -32,8 +32,8 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, on
     if (canMergeOrders) {
       dispatch(addToBasket(newOrder));
       onAction1();
-      onClose();
-      dispatch(setBasketOpen(true));
+      handleCloseBasket();
+      setTimeout(() => dispatch(setBasketOpen(true)), 3000);
     } else {
       setShowModal(true);
     }
@@ -43,8 +43,8 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, on
     dispatch(clearBasket());
     dispatch(addToBasket(newOrder));
     onAction2();
-    onClose();
-    dispatch(setBasketOpen(true));
+    handleCloseBasket();
+    setTimeout(() => dispatch(setBasketOpen(true)), 3000);
   };
 
   const isTotalCostAllowed = (newOrder: Product[]) => {
@@ -58,7 +58,7 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, on
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <span className={styles.close} onClick={handleClose}>
+        <span className={styles.close} onClick={handleCloseBasket}>
           X
         </span>
         <p className={styles.modalMessage}>Что вы хотите сделать?</p>
@@ -69,7 +69,7 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, on
           Создать новый заказ
         </button>
       </div>
-      <Modal message="Корзина уже переполнена" isOpen={showModal} onClose={handleClose} />
+      {showModal && <Modal message="Корзина уже переполнена" isOpen={showModal} onClose={handleCloseBasket} />}
     </div>
   );
 };

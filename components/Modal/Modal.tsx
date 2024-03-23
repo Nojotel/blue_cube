@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Modal.module.css";
 
 interface ModalProps {
@@ -8,16 +8,21 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ message, isOpen, onClose }) => {
+  const [showModal, setShowModal] = useState(isOpen);
+
   useEffect(() => {
+    let timeout: NodeJS.Timeout;
     if (isOpen) {
-      const timeout = setTimeout(() => {
+      setShowModal(true);
+      timeout = setTimeout(() => {
+        setShowModal(false);
         onClose();
       }, 3000);
-      return () => clearTimeout(timeout);
     }
+    return () => clearTimeout(timeout);
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!showModal) return null;
 
   return (
     <div className={styles.modal}>

@@ -18,6 +18,11 @@
   padding: 30px;
   border: 1px solid #888;
   border-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .close {
@@ -75,4 +80,11 @@
 }
 .button:hover {
   background-color: #0056b3;
+}
+@media (max-width: 500px) {
+  .close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
 }
