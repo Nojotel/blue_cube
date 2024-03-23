@@ -2,31 +2,27 @@ import React, { useEffect, useState, useCallback } from "react";
 import { fetchOrders } from "@/api/ordersFetch";
 import { useDispatch, useSelector } from "react-redux";
 import { setOrders } from "@/redux/ordersReducer";
-import { clearBasket, addToBasket, getQuantityInBasket } from "@/redux/basketReducer";
+import { clearBasket, addToBasket, getTotalPriceInBasket } from "@/redux/basketReducer";
 import { RootState } from "@/redux/store";
-import store from "@/redux/store";
 import styles from "./OrdersPage.module.css";
 import Image from "next/image";
 import Loading from "@/app/loading";
 import Pagination from "@/components/Pagination/Pagination";
 import BasketModal from "@/components/BasketModal/BasketModal";
-
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  picture: string;
-  rating: number;
-  quantity: number;
-}
+import { Product } from "@/redux/productReducer";
 
 interface Order {
   id: number;
   quantity: number;
   createdAt: string;
-  products: Product[];
+  products: ProductWithQuantity[];
 }
+
+interface ProductWithQuantity extends Product {
+  quantity: number;
+}
+
+const MAX_TOTAL_COST = 10000;
 
 const OrdersPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -40,15 +36,17 @@ const OrdersPage: React.FC = () => {
   const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+
   const dispatch = useDispatch();
+
   const orders = useSelector<RootState, Order[]>((state) => state.orders.orders);
+  const basketTotalCost = useSelector<RootState, number>(getTotalPriceInBasket);
 
   const fetchData = useCallback(async () => {
     try {
       let page = 1;
       let fetchedOrders: Order[] = [];
       let hasMorePages = true;
-
       while (hasMorePages) {
         const response = await fetchOrders(10, page);
         if (response.data.length === 0) {
@@ -106,14 +104,14 @@ const OrdersPage: React.FC = () => {
   };
 
   const handleMergeOrders = (order: Order) => {
-    order.products.forEach((product) => {
-      const quantityInBasket = getQuantityInBasket(store.getState(), product.id);
-      for (let i = 0; i < product.quantity; i++) {
-        if (i >= quantityInBasket) {
-          dispatch(addToBasket([product]));
-        }
-      }
-    });
+    const newItems: ProductWithQuantity[] = order.products;
+    const orderTotalCost = newItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    if (basketTotalCost + orderTotalCost <= MAX_TOTAL_COST) {
+      dispatch(addToBasket(newItems));
+      handleCloseModal();
+    } else {
+      setIsModalOpen(false);
+    }
   };
 
   const handleCreateNewOrder = (order: Order) => {
@@ -123,6 +121,7 @@ const OrdersPage: React.FC = () => {
         dispatch(addToBasket([product]));
       }
     });
+    handleCloseModal();
   };
 
   return (
@@ -162,7 +161,7 @@ const OrdersPage: React.FC = () => {
       ) : (
         <p className={styles.none}>Заказы не найдены.</p>
       )}
-      {isModalOpen && selectedOrder && <BasketModal isOpen={isModalOpen} onClose={handleCloseModal} newOrder={selectedOrder.products} onAction1={handleMergeOrders.bind(null, selectedOrder)} onAction2={handleCreateNewOrder.bind(null, selectedOrder)} />}
+      {isModalOpen && selectedOrder && <BasketModal isOpen={isModalOpen} onClose={handleCloseModal} newOrder={selectedOrder.products} onAction1={() => handleMergeOrders(selectedOrder)} onAction2={() => handleCreateNewOrder(selectedOrder)} key={selectedOrder.id} />}
     </div>
   );
 };

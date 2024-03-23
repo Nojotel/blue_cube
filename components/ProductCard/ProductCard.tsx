@@ -14,6 +14,7 @@ interface Product {
   title: string;
   rating: number;
   price: number;
+  quantity: number;
 }
 
 interface ProductCardProps {

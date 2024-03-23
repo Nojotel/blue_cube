@@ -7,48 +7,67 @@ import { RootState } from "@/redux/store";
 import { Product } from "@/redux/productReducer";
 import Modal from "@/components/Modal/Modal";
 import { updateBasketOnServer } from "@/api/cartUpdate";
+
 interface BasketModalProps {
   isOpen: boolean;
   onClose: () => void;
   newOrder: Product[];
-  onAction1: () => void;
-  onAction2: () => void;
+  onAction1: (newItems: Product[]) => void;
+  onAction2: (newItems: Product[]) => void;
 }
+
 const MAX_TOTAL_COST = 10000;
+
 const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, onAction1, onAction2 }) => {
   const dispatch = useDispatch();
   const basketItems = useSelector((state: RootState) => state.basket.items);
+
   const [showModal, setShowModal] = React.useState(false);
+
   const handleCloseBasket = () => {
     onClose();
     setShowModal(false);
   };
+
   const handleMergeOrders = () => {
-    const canMergeOrders = isTotalCostAllowed(newOrder);
-    if (canMergeOrders) {
-      dispatch(addToBasket(newOrder));
-      onAction1();
-      handleCloseBasket();
+    const newItems: Product[] = [];
+    let totalCost = 0;
+
+    newOrder.forEach((product) => {
+      const quantityToAdd = product.quantity || 1;
+      for (let i = 0; i < quantityToAdd; i++) {
+        newItems.push(product);
+        totalCost += product.price;
+      }
+    });
+
+    if (totalCost + basketItems.reduce((total, item) => total + item.price * item.quantity, 0) <= MAX_TOTAL_COST) {
+      dispatch(addToBasket(newItems));
       setTimeout(() => dispatch(setBasketOpen(true)), 3000);
       updateBasketOnServer();
+      onAction1(newItems);
     } else {
       setShowModal(true);
     }
   };
+
   const handleCreateNewOrder = () => {
+    const newItems: Product[] = [];
+    newOrder.forEach((product) => {
+      const quantityToAdd = product.quantity || 1;
+      for (let i = 0; i < quantityToAdd; i++) {
+        newItems.push(product);
+      }
+    });
     dispatch(clearBasket());
-    dispatch(addToBasket(newOrder));
-    onAction2();
-    handleCloseBasket();
+    newItems.forEach((product) => dispatch(addToBasket([product])));
     setTimeout(() => dispatch(setBasketOpen(true)), 3000);
     updateBasketOnServer();
+    onAction2(newItems);
   };
-  const isTotalCostAllowed = (newOrder: Product[]) => {
-    const totalCost = basketItems.reduce((total, item) => total + item.price * item.quantity, 0);
-    const newTotalCost = newOrder.reduce((total, product) => total + product.price, totalCost);
-    return newTotalCost <= MAX_TOTAL_COST;
-  };
+
   if (!isOpen) return null;
+
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -67,5 +86,5 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, on
     </div>
   );
 };
+
 export default BasketModal;
-/////
