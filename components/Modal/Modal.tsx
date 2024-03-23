@@ -17,7 +17,7 @@ const Modal: React.FC<ModalProps> = ({ message, isOpen, onClose }) => {
       timeout = setTimeout(() => {
         setShowModal(false);
         onClose();
-      }, 3000);
+      }, 2000);
     }
     return () => clearTimeout(timeout);
   }, [isOpen, onClose]);
