@@ -6,6 +6,7 @@ import { setBasketOpen } from "@/redux/basketSlice";
 import { RootState } from "@/redux/store";
 import { Product } from "@/redux/productReducer";
 import Modal from "@/components/Modal/Modal";
+import { updateBasketOnServer } from "@/api/cartUpdate";
 
 interface BasketModalProps {
   isOpen: boolean;
@@ -34,6 +35,7 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, on
       onAction1();
       handleCloseBasket();
       setTimeout(() => dispatch(setBasketOpen(true)), 3000);
+      updateBasketOnServer();
     } else {
       setShowModal(true);
     }
@@ -45,6 +47,7 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, on
     onAction2();
     handleCloseBasket();
     setTimeout(() => dispatch(setBasketOpen(true)), 3000);
+    updateBasketOnServer();
   };
 
   const isTotalCostAllowed = (newOrder: Product[]) => {

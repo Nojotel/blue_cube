@@ -2,6 +2,7 @@ import { createSlice, PayloadAction, Reducer } from "@reduxjs/toolkit";
 import { Product } from "./productReducer";
 import { RootState } from "./store";
 import Cookies from "js-cookie";
+import { updateBasketOnServer } from "@/api/cartUpdate";
 
 interface BasketItem extends Product {
   quantity: number;
