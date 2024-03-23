@@ -107,13 +107,13 @@ const OrdersPage = () => {
     dispatch(clearBasket());
 
     order.products.forEach((product) => {
-      dispatch(addToBasket(product));
+      dispatch(addToBasket([product]));
     });
   };
 
   const handleMergeOrders = (order: Order) => {
     order.products.forEach((product) => {
-      dispatch(addToBasket(product));
+      dispatch(addToBasket([product]));
     });
   };
 
@@ -154,7 +154,7 @@ const OrdersPage = () => {
       ) : (
         <p className={styles.none}>Заказы не найдены.</p>
       )}
-      {isModalOpen && selectedOrder && <BasketModal message="Что вы хотите сделать?" isOpen={isModalOpen} onClose={handleCloseModal} onAction1={() => handleMergeOrders(selectedOrder)} onAction2={() => handleCreateNewOrder(selectedOrder)} />}
+      {isModalOpen && selectedOrder && <BasketModal isOpen={isModalOpen} onClose={handleCloseModal} newOrder={selectedOrder.products} onAction1={handleMergeOrders.bind(null, selectedOrder)} onAction2={handleCreateNewOrder.bind(null, selectedOrder)} />}
     </div>
   );
 };

@@ -42,18 +42,22 @@ const basketSlice = createSlice({
   name: "basket",
   initialState,
   reducers: {
-    addToBasket: (state, action: PayloadAction<Product>) => {
+    addToBasket: (state, action: PayloadAction<Product[]>) => {
       const totalCost = state.items.reduce((total: number, item: BasketItem) => total + item.price * item.quantity, 0);
-      if (totalCost + action.payload.price <= MAX_TOTAL_COST) {
-        const itemIndex = state.items.findIndex((i) => i.id === action.payload.id);
-        if (itemIndex !== -1) {
-          const item = state.items[itemIndex];
-          if (item.quantity < MAX_ITEM_QUANTITY) {
-            item.quantity += 1;
+      const newTotalCost = action.payload.reduce((total: number, product: Product) => total + product.price, totalCost);
+
+      if (newTotalCost <= MAX_TOTAL_COST) {
+        action.payload.forEach((product) => {
+          const itemIndex = state.items.findIndex((i) => i.id === product.id);
+          if (itemIndex !== -1) {
+            const item = state.items[itemIndex];
+            if (item.quantity < MAX_ITEM_QUANTITY) {
+              item.quantity += 1;
+            }
+          } else {
+            state.items.push({ ...product, quantity: 1 });
           }
-        } else {
-          state.items.push({ ...action.payload, quantity: 1 });
-        }
+        });
       }
     },
     removeFromBasket: (state, action: PayloadAction<string>) => {

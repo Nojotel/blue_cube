@@ -41,7 +41,7 @@ const ProductDetails: React.FC = () => {
         return;
       }
       setShowQuantityButtons(true);
-      dispatch(addToBasket(product));
+      dispatch(addToBasket([product]));
       updateBasketOnServer();
     }
   };
