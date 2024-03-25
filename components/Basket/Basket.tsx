@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Basket.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -45,6 +45,7 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
   const basketItems = useSelector((state: RootState) => state.basket.items);
   const [showModal, setShowModal] = React.useState(false);
   const [isSending, setIsSending] = React.useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   useEffect(() => {
     fetchCartData(dispatch);
@@ -81,8 +82,12 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
       await submitCart(basketItems);
       dispatch(clearBasket());
       Cookies.remove("basket");
+      setModalMessage("Заказ успешно оформлен");
+      setShowModal(true);
     } catch (error) {
       console.error("Ошибка при отправке запроса:", error);
+      setModalMessage("Произошла ошибка в формировании заказа");
+      setShowModal(true);
     } finally {
       setIsSending(false);
     }
@@ -117,7 +122,7 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
           <button className={`${styles.checkout} ${basketItems.length === 0 || isSending ? styles.disabled : ""}`} onClick={handleCheckoutClick} disabled={isSending || basketItems.length === 0}>
             {isSending ? "Отправка..." : "Оформить заказ"}
           </button>
-          <Modal message="Корзина переполнена" isOpen={showModal} onClose={closeModal} />
+          <Modal message={modalMessage} isOpen={showModal} onClose={closeModal} />
         </div>
       )}
     </div>
