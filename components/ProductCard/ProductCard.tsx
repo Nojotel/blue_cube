@@ -1,12 +1,12 @@
 import Link from "next/link";
 import React, { useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import styles from "./ProductCard.module.css";
 import { fetchProducts } from "@/redux/productReducer";
 import Loading from "@/app/loading";
-import { GenerateStars } from "./generateStars";
-import { AppDispatch, RootState } from "@/redux/store";
+import GenerateStars from "./generateStars";
+import { RootState, AppDispatch } from "@/redux/store";
 
 interface Product {
   id: string;
@@ -14,7 +14,6 @@ interface Product {
   title: string;
   rating: number;
   price: number;
-  quantity: number;
 }
 
 interface ProductCardProps {
@@ -23,13 +22,10 @@ interface ProductCardProps {
   hasHydrated: boolean;
 }
 
-const selectProducts = (state: RootState) => state.product.products;
-const selectStatus = (state: RootState) => state.product.status;
-
 const ProductCard: React.FC<ProductCardProps> = React.memo(({ setPage, page, hasHydrated }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const products = useSelector(selectProducts);
-  const status = useSelector(selectStatus);
+  const products = useSelector((state: RootState) => state.product.products);
+  const status = useSelector((state: RootState) => state.product.status);
 
   const dispatchFetchProducts = useCallback(
     (page: number) => {

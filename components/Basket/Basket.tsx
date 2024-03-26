@@ -31,32 +31,30 @@ const TITLE_MAX_LENGTH = 20;
 const trimTextToWholeWords = (text: string, maxLength: number): string => {
   let trimmedText = text.substr(0, maxLength);
   if (trimmedText.length < text.length) {
-    trimmedText = trimmedText.substr(0, Math.min(trimmedText.length, trimmedText.lastIndexOf(" ")));
+    const lastSpaceIndex = trimmedText.lastIndexOf(" ");
+    trimmedText = lastSpaceIndex !== -1 ? trimmedText.substr(0, lastSpaceIndex) : trimmedText;
   }
-  const lastWord = trimmedText.split(" ").pop();
-  if (lastWord && lastWord.length === 1) {
-    trimmedText = trimmedText.substr(0, trimmedText.lastIndexOf(" "));
-  }
-  return trimmedText;
+  return trimmedText.endsWith(".") ? trimmedText : trimmedText.trim();
 };
 
 const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
   const dispatch = useDispatch();
   const basketItems = useSelector((state: RootState) => state.basket.items);
-  const [showModal, setShowModal] = React.useState(false);
-  const [isSending, setIsSending] = React.useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
 
   useEffect(() => {
     fetchCartData(dispatch);
   }, [dispatch]);
 
-  const handleQuantityChange = (productId: string, increment: boolean, isFromModal: boolean = false) => {
+  const handleQuantityChange = (productId: string, increment: boolean, isFromModal = false) => {
     const item = basketItems.find((item) => item.id === productId);
     const totalCost = calculateTotalPrice() + (increment ? item?.price || 0 : -(item?.price || 0));
     if (totalCost > MAX_TOTAL_COST) {
       if (!isFromModal) {
         setShowModal(true);
+        setModalMessage("Превышен максимально допустимый лимит корзины");
       }
       return;
     }

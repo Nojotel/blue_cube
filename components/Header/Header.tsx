@@ -13,7 +13,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store";
 import { setBasketOpen } from "@/redux/basketSlice";
 
-const Header: FC = () => {
+interface HeaderProps {}
+
+const Header: FC<HeaderProps> = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [logoSrc, setLogoSrc] = useState(logo);
   const [isMobile, setIsMobile] = useState(false);
@@ -26,25 +28,20 @@ const Header: FC = () => {
   const basketItems = useSelector((state: RootState) => state.basket.items);
   const basketCount = basketItems.reduce((count, item) => count + item.quantity, 0);
 
+  const getIsMobile = useCallback(() => window.innerWidth < 530, []);
+  const getIsMedium = useCallback(() => window.innerWidth < 1050, []);
+
   useEffect(() => {
-    const getIsMobile = () => window.innerWidth < 530;
-    const getIsMedium = () => window.innerWidth < 1050;
     setIsMobile(getIsMobile());
     setShowBackToTop(getIsMedium());
     setLogoSrc(logo);
     const handleResize = () => {
-      const isMobile = getIsMobile();
-      const isMedium = getIsMedium();
-      setIsMobile(isMobile);
-      setShowBackToTop(isMedium);
+      setIsMobile(getIsMobile());
+      setShowBackToTop(getIsMedium());
       setLogoSrc(logo);
     };
     const handleScroll = () => {
-      if (window.scrollY > 100) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 100);
     };
     window.addEventListener("resize", handleResize);
     window.addEventListener("scroll", handleScroll);
@@ -52,9 +49,9 @@ const Header: FC = () => {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [getIsMedium, getIsMobile]);
 
-  const handleBasketToggle = useCallback(
+  const dispatchBasketOpen = useCallback(
     (value: boolean) => {
       dispatch(setBasketOpen(value));
     },
@@ -87,8 +84,8 @@ const Header: FC = () => {
             <Link href="/orders">Заказы</Link>
           </li>
         </ul>
-        <Basket isOpen={isOpen} onToggle={handleBasketToggle}>
-          <div className={`${styles.basketContainer} ${isOpen || isBasketPage ? styles.hovered : ""} ${isOpen ? styles.opened : ""}`} onClick={() => handleBasketToggle(!isOpen)} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+        <Basket isOpen={isOpen} onToggle={dispatchBasketOpen}>
+          <div className={`${styles.basketContainer} ${isOpen || isBasketPage ? styles.hovered : ""} ${isOpen ? styles.opened : ""}`} onClick={() => dispatchBasketOpen(!isOpen)} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <Image className={styles.basket} src={isHovered || isOpen ? basketHover : basket} alt="Корзина" width={20} height={20} />
             {!isMobile && <span className={styles.basketText}>Корзина</span>}
             <span style={{ color: "rgb(23, 32, 41)" }}>({basketCount})</span>

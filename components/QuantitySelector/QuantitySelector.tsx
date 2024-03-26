@@ -18,13 +18,16 @@ interface QuantitySelectorProps {
 }
 
 const QuantitySelector: React.FC<QuantitySelectorProps> = ({ quantity, isMinusClicked, isPlusClicked, handleMinusClick, handlePlusClick, handleRemoveClick, handlePlaceOrderClick, showOrderButton = true }) => {
+  const minusButtonClass = quantity > 0 ? (isMinusClicked ? styles.buttonMinusClicked : styles.buttonMinus) : styles.buttonMinusInactive;
+  const plusButtonClass = isPlusClicked ? styles.buttonPlusClicked : styles.buttonPlus;
+
   return (
     <div className={styles.quantityContainer}>
-      <button className={quantity > 0 ? (isMinusClicked ? styles.buttonMinusClicked : styles.buttonMinus) : styles.buttonMinusInactive} onClick={handleMinusClick} disabled={quantity === 0}>
+      <button className={minusButtonClass} onClick={handleMinusClick} disabled={quantity === 0}>
         <Image src={isMinusClicked ? MinusWhite : Minus} alt="Кнопка на один товар меньше" width={20} height={20} />
       </button>
       <span className={styles.buttonQuantity}>{quantity}</span>
-      <button className={isPlusClicked ? styles.buttonPlusClicked : styles.buttonPlus} onClick={handlePlusClick}>
+      <button className={plusButtonClass} onClick={handlePlusClick}>
         <Image src={isPlusClicked ? PlusWhite : Plus} alt="Кнопка на один товар больше" width={20} height={20} />
       </button>
       {quantity === 0 && (

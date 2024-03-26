@@ -8,30 +8,26 @@ interface GenerateStarsProps {
   rating: number;
 }
 
-export const GenerateStars: FC<GenerateStarsProps> = ({ rating }) => {
-  let fullStars, halfStar, emptyStars;
-  if (rating >= 4.8) {
-    fullStars = 5;
-    halfStar = false;
-    emptyStars = 0;
-  } else if (rating >= 4.3) {
-    fullStars = 4;
-    halfStar = true;
-    emptyStars = 0;
-  } else {
-    fullStars = Math.floor(rating);
-    halfStar = rating % 1 >= 0.6;
-    emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-  }
-  return (
-    <>
-      {[...Array(fullStars)].map((_, i) => (
-        <Image key={i} src={star} alt="Full Star" width={16} height={16} />
-      ))}
-      {halfStar && <Image src={starHalf} alt="Half Star" width={16} height={16} />}
-      {[...Array(emptyStars)].map((_, i) => (
-        <Image key={i} src={starNone} alt="Empty Star" width={16} height={16} />
-      ))}
-    </>
-  );
+const GenerateStars: FC<GenerateStarsProps> = ({ rating }) => {
+  const renderStars = () => {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 >= 0.6;
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+    const stars = [];
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<Image key={i} src={star} alt="Full Star" width={16} height={16} />);
+    }
+    if (halfStar) {
+      stars.push(<Image key="half" src={starHalf} alt="Half Star" width={16} height={16} />);
+    }
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(<Image key={`empty-${i}`} src={starNone} alt="Empty Star" width={16} height={16} />);
+    }
+    return stars;
+  };
+
+  return <>{renderStars()}</>;
 };
+
+export default GenerateStars;

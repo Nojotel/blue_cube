@@ -11,33 +11,32 @@ const selectStatus = (state: RootState) => state.product.status;
 
 const useScrollPosition = (initialPage: number): [number, Dispatch<SetStateAction<number>>] => {
   const [page, setPage] = useState(initialPage);
-  const [isClient, setIsClient] = useState(false);
+  const isClient = typeof window !== "undefined";
 
   useEffect(() => {
     const handleScroll = () => {
-      if (typeof window !== "undefined") {
+      if (isClient) {
         window.scrollTo({ top: Number(localStorage.getItem("scrollPosition")) || 0, behavior: "smooth" });
       }
     };
 
     const saveScrollPosition = () => {
-      if (typeof window !== "undefined") {
+      if (isClient) {
         localStorage.setItem("scrollPosition", window.pageYOffset.toString());
       }
     };
 
-    window.addEventListener("scroll", saveScrollPosition);
-    handleScroll();
-    setIsClient(true);
+    if (isClient) {
+      window.addEventListener("scroll", saveScrollPosition);
+      handleScroll();
+    }
 
     return () => {
-      window.removeEventListener("scroll", saveScrollPosition);
+      if (isClient) {
+        window.removeEventListener("scroll", saveScrollPosition);
+      }
     };
-  }, []);
-
-  if (!isClient) {
-    return [initialPage, () => {}];
-  }
+  }, [isClient]);
 
   return [page, setPage];
 };
@@ -45,7 +44,7 @@ const useScrollPosition = (initialPage: number): [number, Dispatch<SetStateActio
 const ProductList = () => {
   const [hasHydrated, setHasHydrated] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const initialPage = typeof window !== "undefined" ? Number(localStorage.getItem("productListPage")) || 1 : 1;
+  const initialPage = isClient ? Number(localStorage.getItem("productListPage")) || 1 : 1;
   const [page, setPage] = useScrollPosition(initialPage);
 
   const dispatch = useDispatch<AppDispatch>();

@@ -25,29 +25,15 @@ const Pagination: FC<PaginationProps> = ({ setPage, page, totalPages, storageKey
 
   useEffect(() => {
     const updateVisiblePages = () => {
-      if (window.innerWidth < 530) {
-        setVisiblePages(1);
-      } else {
-        setVisiblePages(5);
-      }
+      setVisiblePages(window.innerWidth < 530 ? 1 : 5);
     };
 
     window.addEventListener("resize", updateVisiblePages);
     updateVisiblePages();
-
     setIsClient(true);
 
     return () => window.removeEventListener("resize", updateVisiblePages);
   }, []);
-
-  if (!isClient) {
-    return null;
-  }
-
-  let startPage = Math.max(page - Math.floor(visiblePages / 2), 1);
-  startPage = Math.min(startPage, totalPages - visiblePages + 1);
-  let endPage = startPage + visiblePages - 1;
-  endPage = Math.min(endPage, totalPages);
 
   const handleClick = (newPage: number, direction: string) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -62,6 +48,20 @@ const Pagination: FC<PaginationProps> = ({ setPage, page, totalPages, storageKey
     }
   };
 
+  const renderPageButtons = () => {
+    const startPage = Math.max(page - Math.floor(visiblePages / 2), 1);
+    const endPage = Math.min(startPage + visiblePages - 1, totalPages);
+
+    return Array.from({ length: endPage - startPage + 1 }, (_, i) => {
+      const pageNumber = startPage + i;
+      return pageNumber >= 1 && pageNumber <= totalPages ? (
+        <button key={pageNumber} onClick={() => handleClick(pageNumber, "")} className={`${pageNumber === page ? styles.active : ""} ${styles.button}`}>
+          {pageNumber}
+        </button>
+      ) : null;
+    });
+  };
+
   return (
     <div className={styles.container}>
       {page > 1 && (
@@ -69,14 +69,7 @@ const Pagination: FC<PaginationProps> = ({ setPage, page, totalPages, storageKey
           <Image src={isLeftClicked ? leftActiveIcon.src : leftIcon.src} alt={isLeftClicked ? "Left Active" : "Left"} width={20} height={20} />
         </button>
       )}
-      {[...Array(endPage - startPage + 1)].map((_, i) => {
-        const pageNumber = startPage + i;
-        return pageNumber >= 1 && pageNumber <= totalPages ? (
-          <button key={pageNumber} onClick={() => handleClick(pageNumber, "")} className={`${pageNumber === page ? styles.active : ""} ${styles.button}`}>
-            {pageNumber}
-          </button>
-        ) : null;
-      })}
+      {renderPageButtons()}
       {page < totalPages && (
         <button className={`${styles.right} ${isRightClicked ? styles.active : ""}`} onClick={() => handleClick(page + 1, "right")} disabled={page === totalPages}>
           <Image src={isRightClicked ? rightActiveIcon.src : rightIcon.src} alt={isRightClicked ? "Right Active" : "Right"} width={20} height={20} />

@@ -24,6 +24,7 @@ interface ProductWithQuantity extends Product {
 }
 
 const MAX_TOTAL_COST = 10000;
+const ORDERS_PER_PAGE = 10;
 
 const OrdersPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,22 +42,19 @@ const OrdersPage: React.FC = () => {
     try {
       let page = 1;
       let fetchedOrders: Order[] = [];
-      let hasMorePages = true;
 
-      while (hasMorePages) {
-        const response = await fetchOrders(10, page);
+      while (true) {
+        const response = await fetchOrders(ORDERS_PER_PAGE, page);
         if (response.data.length === 0) {
           break;
         }
-        const offset = (page - 1) * 10;
         const formattedOrders: Order[] = response.data.map((orderData: any[], index: number) => ({
-          id: index + offset + 1,
+          id: (page - 1) * ORDERS_PER_PAGE + index + 1,
           createdAt: response.data[0][0].createdAt,
           products: orderData.map((item: any) => ({ ...item.product, quantity: item.quantity })),
           quantity: orderData.length,
         }));
-        fetchedOrders = [...fetchedOrders, ...formattedOrders];
-        hasMorePages = response.data.length === 10;
+        fetchedOrders.push(...formattedOrders);
         page++;
       }
       setAllOrders(fetchedOrders);
@@ -73,7 +71,9 @@ const OrdersPage: React.FC = () => {
   }, [fetchData]);
 
   useEffect(() => {
-    const pageOrders = allOrders.slice((currentPage - 1) * 10, currentPage * 10);
+    const startIndex = (currentPage - 1) * ORDERS_PER_PAGE;
+    const endIndex = currentPage * ORDERS_PER_PAGE;
+    const pageOrders = allOrders.slice(startIndex, endIndex);
     dispatch(setOrders(pageOrders));
   }, [dispatch, currentPage, allOrders]);
 
@@ -84,7 +84,7 @@ const OrdersPage: React.FC = () => {
   }, [currentPage]);
 
   const handlePageChange = (page: number) => {
-    if (page >= 1) {
+    if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
