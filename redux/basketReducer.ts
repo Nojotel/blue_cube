@@ -1,12 +1,8 @@
 import { createSlice, PayloadAction, Reducer } from "@reduxjs/toolkit";
-import { Product } from "./productReducer";
 import { RootState } from "./store";
 import Cookies from "js-cookie";
 import { updateBasketOnServer } from "@/api/cartUpdate";
-
-interface BasketItem extends Product {
-  quantity: number;
-}
+import { BasketItem, Product, MAX_TOTAL_COST, MAX_ITEM_QUANTITY } from "@/types/types";
 
 interface BasketState {
   items: BasketItem[];
@@ -16,10 +12,7 @@ const initialState: BasketState = {
   items: [],
 };
 
-const MAX_TOTAL_COST = 10000;
-const MAX_ITEM_QUANTITY = 10;
-
-const updateQuantity = (state: BasketState, productId: string, increment: boolean) => {
+const updateQuantity = (state: BasketState, productId: string, increment: boolean, MAX_ITEM_QUANTITY: number) => {
   const itemIndex = state.items.findIndex((i) => i.id === productId);
   if (itemIndex !== -1) {
     const item = state.items[itemIndex];
@@ -68,10 +61,10 @@ const basketSlice = createSlice({
       }
     },
     incrementQuantity: (state, action: PayloadAction<string>) => {
-      updateQuantity(state, action.payload, true);
+      updateQuantity(state, action.payload, true, MAX_ITEM_QUANTITY);
     },
     decrementQuantity: (state, action: PayloadAction<string>) => {
-      updateQuantity(state, action.payload, false);
+      updateQuantity(state, action.payload, false, MAX_ITEM_QUANTITY);
     },
     clearBasket: (state) => {
       state.items = [];

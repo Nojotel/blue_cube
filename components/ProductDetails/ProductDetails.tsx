@@ -10,13 +10,11 @@ import { addToBasket, incrementQuantity, decrementQuantity, getQuantityInBasket,
 import GenerateStars from "@/components/ProductCard/generateStars";
 import styles from "./ProductDetails.module.css";
 import { AppDispatch, RootState } from "@/redux/store";
-import { Product } from "@/redux/productReducer";
+import { Product, ModalProps, MAX_TOTAL_COST } from "@/types/types";
 import { setBasketOpen } from "@/redux/basketSlice";
 import QuantitySelector from "@/components/QuantitySelector/QuantitySelector";
 import Modal from "@/components/Modal/Modal";
 import { updateBasketOnServer } from "@/api/cartUpdate";
-
-const MAX_TOTAL_COST = 10000;
 
 const ProductDetails: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

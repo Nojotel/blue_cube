@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchProducts } from "@/redux/productReducer";
 import { AppDispatch, RootState } from "@/redux/store";
 import styles from "./ProductList.module.css";
+import { PaginationProps } from "@/types/types";
 
 const selectProducts = (state: RootState) => state.product.products;
 const selectStatus = (state: RootState) => state.product.status;

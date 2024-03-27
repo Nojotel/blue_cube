@@ -3,10 +3,7 @@ import Image from "next/image";
 import star from "@/public/star.svg";
 import starHalf from "@/public/StarHalf.svg";
 import starNone from "@/public/starNone.svg";
-
-interface GenerateStarsProps {
-  rating: number;
-}
+import { GenerateStarsProps } from "@/types/types";
 
 const GenerateStars: FC<GenerateStarsProps> = ({ rating }) => {
   const renderStars = () => {

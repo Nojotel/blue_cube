@@ -3,24 +3,11 @@ import React, { useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
 import styles from "./ProductCard.module.css";
+import { RootState, AppDispatch } from "@/redux/store";
 import { fetchProducts } from "@/redux/productReducer";
 import Loading from "@/app/loading";
 import GenerateStars from "./generateStars";
-import { RootState, AppDispatch } from "@/redux/store";
-
-interface Product {
-  id: string;
-  picture: string;
-  title: string;
-  rating: number;
-  price: number;
-}
-
-interface ProductCardProps {
-  setPage: (page: number) => void;
-  page: number;
-  hasHydrated: boolean;
-}
+import { ProductCardProps, Product } from "@/types/types";
 
 const ProductCard: React.FC<ProductCardProps> = React.memo(({ setPage, page, hasHydrated }) => {
   const dispatch = useDispatch<AppDispatch>();

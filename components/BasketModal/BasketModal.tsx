@@ -4,23 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearBasket, addToBasket } from "@/redux/basketReducer";
 import { setBasketOpen } from "@/redux/basketSlice";
 import { RootState } from "@/redux/store";
-import { Product } from "@/redux/productReducer";
+import { Product, Order, BasketModalProps, MAX_TOTAL_COST, OrderProduct } from "@/types/types";
 import Modal from "@/components/Modal/Modal";
 import { updateBasketOnServer } from "@/api/cartUpdate";
-
-interface BasketModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  newOrder: Product[];
-  onAction1: (order: Order) => void;
-  onAction2: (order: Order) => void;
-}
-
-interface Order {
-  products: Product[];
-}
-
-const MAX_TOTAL_COST = 10000;
 
 const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, onAction1, onAction2 }) => {
   const dispatch = useDispatch();
@@ -29,8 +15,8 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, on
 
   const isTotalCostAllowed = useCallback(
     (order: Order) => {
-      const totalCost = basketItems.reduce((total, item) => total + item.price * item.quantity, 0);
-      const newTotalCost = order.products.reduce((total, product) => total + product.price * product.quantity, totalCost);
+      const totalCost = basketItems.reduce((total, item) => total + item.price * item.quantity!, 0);
+      const newTotalCost = order.products.reduce((total, product) => total + product.price * product.quantity!, totalCost);
       return newTotalCost <= MAX_TOTAL_COST;
     },
     [basketItems]
@@ -42,7 +28,7 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, on
   }, [onClose]);
 
   const handleMergeOrders = useCallback(() => {
-    const order: Order = { products: newOrder };
+    const order: Order = { id: 0, quantity: 0, createdAt: "", products: newOrder };
     const canMergeOrders = isTotalCostAllowed(order);
     if (canMergeOrders) {
       newOrder.forEach((product) => {
@@ -57,7 +43,7 @@ const BasketModal: React.FC<BasketModalProps> = ({ isOpen, onClose, newOrder, on
   }, [dispatch, handleCloseBasket, isTotalCostAllowed, newOrder]);
 
   const handleCreateNewOrder = useCallback(() => {
-    const order: Order = { products: newOrder };
+    const order: Order = { id: 0, quantity: 0, createdAt: "", products: newOrder };
     onAction2(order);
     setTimeout(() => dispatch(setBasketOpen(true)), 3000);
     updateBasketOnServer();

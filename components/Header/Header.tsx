@@ -12,6 +12,7 @@ import Basket from "@/components/Basket/Basket";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store";
 import { setBasketOpen } from "@/redux/basketSlice";
+import { BasketProps, BasketItem, BasketModalProps } from "@/types/types";
 
 interface HeaderProps {}
 

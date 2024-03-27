@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Modal.module.css";
-
-interface ModalProps {
-  message: string;
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { ModalProps } from "@/types/types";
 
 const Modal: React.FC<ModalProps> = ({ message, isOpen, onClose }) => {
   const [showModal, setShowModal] = useState(false);

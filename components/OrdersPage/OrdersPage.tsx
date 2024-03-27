@@ -9,22 +9,8 @@ import Image from "next/image";
 import Loading from "@/app/loading";
 import Pagination from "@/components/Pagination/Pagination";
 import BasketModal from "@/components/BasketModal/BasketModal";
-import { Product } from "@/types/types"; // Импортируем интерфейс Product из types.ts
+import { Order, OrderProduct, ORDERS_PER_PAGE, MAX_TOTAL_COST } from "@/types/types";
 import store from "@/redux/store";
-
-interface Order {
-  id: number;
-  createdAt: string;
-  products: ProductWithQuantity[];
-  quantity: number;
-}
-
-interface ProductWithQuantity extends Product {
-  quantity: number;
-}
-
-const MAX_TOTAL_COST = 10000;
-const ORDERS_PER_PAGE = 10;
 
 const OrdersPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -100,7 +86,7 @@ const OrdersPage: React.FC = () => {
   };
 
   const handleMergeOrders = (order: Order) => {
-    const newItems: ProductWithQuantity[] = order.products;
+    const newItems: OrderProduct[] = order.products;
     const currentTotalCost = getTotalPriceInBasket(store.getState());
     const orderTotalCost = newItems.reduce((total, item) => total + item.price * item.quantity, 0);
 

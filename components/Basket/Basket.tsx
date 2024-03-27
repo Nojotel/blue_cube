@@ -10,23 +10,7 @@ import Cookies from "js-cookie";
 import { updateBasketOnServer } from "@/api/cartUpdate";
 import { submitCart } from "@/api/cartSubmit";
 import { fetchCartData } from "@/api/cartFetch";
-
-interface BasketItem {
-  id: string;
-  title: string;
-  price: number;
-  quantity: number;
-  picture: string;
-}
-
-interface BasketProps {
-  isOpen: boolean;
-  onToggle: (value: boolean) => void;
-  children: React.ReactNode;
-}
-
-const MAX_TOTAL_COST = 10000;
-const TITLE_MAX_LENGTH = 20;
+import { BasketItem, BasketProps, MAX_TOTAL_COST, TITLE_MAX_LENGTH } from "@/types/types";
 
 const trimTextToWholeWords = (text: string, maxLength: number): string => {
   let trimmedText = text.substr(0, maxLength);

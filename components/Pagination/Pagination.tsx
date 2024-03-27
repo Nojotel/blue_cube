@@ -5,13 +5,7 @@ import leftIcon from "@/public/Left.svg";
 import rightIcon from "@/public/Right.svg";
 import leftActiveIcon from "@/public/LeftActive.svg";
 import rightActiveIcon from "@/public/RightActive.svg";
-
-interface PaginationProps {
-  setPage: (page: number) => void;
-  page: number;
-  totalPages: number;
-  storageKey: string;
-}
+import { PaginationProps } from "@/types/types";
 
 const Pagination: FC<PaginationProps> = ({ setPage, page, totalPages, storageKey }) => {
   const [isLeftClicked, setIsLeftClicked] = useState(false);
