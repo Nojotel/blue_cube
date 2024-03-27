@@ -22,12 +22,12 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({ quantity, isMinusCl
       </button>
       {quantity === 0 && (
         <button className={styles.removeButton} onClick={handleRemoveClick}>
-          Remove
+          Удалить
         </button>
       )}
       {showOrderButton && quantity > 0 && handlePlaceOrderClick && (
         <button className={styles.orderButton} onClick={handlePlaceOrderClick}>
-          Place Order
+          Добавить в корзину
         </button>
       )}
     </div>

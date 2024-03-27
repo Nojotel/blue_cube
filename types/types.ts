@@ -100,5 +100,5 @@ export interface QuantitySelectorProps {
 
 export const MAX_TOTAL_COST = 30000;
 export const MAX_ITEM_QUANTITY = 10;
-export const TITLE_MAX_LENGTH = 20;
+export const TITLE_MAX_LENGTH = 28;
 export const ORDERS_PER_PAGE = 10;

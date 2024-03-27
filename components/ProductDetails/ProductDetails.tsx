@@ -10,11 +10,12 @@ import { addToBasket, incrementQuantity, decrementQuantity, getQuantityInBasket,
 import GenerateStars from "@/components/ProductCard/generateStars";
 import styles from "./ProductDetails.module.css";
 import { AppDispatch, RootState } from "@/redux/store";
-import { Product, ModalProps, MAX_TOTAL_COST } from "@/types/types";
+import { Product, ModalProps, MAX_TOTAL_COST, TITLE_MAX_LENGTH } from "@/types/types";
 import { setBasketOpen } from "@/redux/basketSlice";
 import QuantitySelector from "@/components/QuantitySelector/QuantitySelector";
 import Modal from "@/components/Modal/Modal";
 import { updateBasketOnServer } from "@/api/cartUpdate";
+import { trimTextToWholeWords } from "@/components/Basket/TrimText";
 
 const ProductDetails: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -94,7 +95,7 @@ const ProductDetails: React.FC = () => {
       <div className={styles.container}>
         <Image className={styles.image} src={product.picture} alt={product.title} width={374} height={374} priority />
         <div className={styles.information}>
-          <h2 className={styles.title}>{product.title}</h2>
+          <h2 className={styles.title}>{trimTextToWholeWords(product.title, TITLE_MAX_LENGTH)}</h2>
           <p className={styles.rating}>
             <GenerateStars rating={product.rating} />
           </p>

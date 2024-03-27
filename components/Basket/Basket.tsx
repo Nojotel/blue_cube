@@ -11,15 +11,7 @@ import { updateBasketOnServer } from "@/api/cartUpdate";
 import { submitCart } from "@/api/cartSubmit";
 import { fetchCartData } from "@/api/cartFetch";
 import { BasketItem, BasketProps, MAX_TOTAL_COST, TITLE_MAX_LENGTH } from "@/types/types";
-
-const trimTextToWholeWords = (text: string, maxLength: number): string => {
-  let trimmedText = text.substr(0, maxLength);
-  if (trimmedText.length < text.length) {
-    const lastSpaceIndex = trimmedText.lastIndexOf(" ");
-    trimmedText = lastSpaceIndex !== -1 ? trimmedText.substr(0, lastSpaceIndex) : trimmedText;
-  }
-  return trimmedText.endsWith(".") ? trimmedText : trimmedText.trim();
-};
+import { trimTextToWholeWords } from "@/components/Basket/TrimText";
 
 const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
   const dispatch = useDispatch();

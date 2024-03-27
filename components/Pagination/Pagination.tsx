@@ -31,6 +31,7 @@ const Pagination: FC<PaginationProps> = ({ setPage, page, totalPages, storageKey
 
   const handleClick = (newPage: number, direction: string) => {
     if (newPage >= 1 && newPage <= totalPages) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
       setPage(newPage);
       if (direction === "left") {
         setIsLeftClicked(true);

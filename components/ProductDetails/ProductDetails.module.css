@@ -210,6 +210,7 @@
   .titleDescription {
     margin-bottom: 8px;
     text-align: center;
+    margin: 0 auto;
   }
 
   .subtitleDescription {

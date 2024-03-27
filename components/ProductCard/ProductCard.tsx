@@ -7,7 +7,8 @@ import { RootState, AppDispatch } from "@/redux/store";
 import { fetchProducts } from "@/redux/productReducer";
 import Loading from "@/app/loading";
 import GenerateStars from "./generateStars";
-import { ProductCardProps, Product } from "@/types/types";
+import { ProductCardProps, Product, TITLE_MAX_LENGTH } from "@/types/types";
+import { trimTextToWholeWords } from "@/components/Basket/TrimText";
 
 const ProductCard: React.FC<ProductCardProps> = React.memo(({ setPage, page, hasHydrated }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,7 +38,7 @@ const ProductCard: React.FC<ProductCardProps> = React.memo(({ setPage, page, has
         <Link key={product.id} href={`/products/${product.id}`}>
           <div className={styles.container}>
             <Image className={styles.image} src={product.picture} alt={product.title} width={240} height={240} priority />
-            <h2 className={styles.title}>{product.title}</h2>
+            <h2 className={styles.title}>{trimTextToWholeWords(product.title, TITLE_MAX_LENGTH)}</h2>
             <p className={styles.rating}>
               <GenerateStars rating={product.rating} />
             </p>
