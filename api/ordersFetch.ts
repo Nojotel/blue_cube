@@ -1,14 +1,18 @@
+import axios from "axios";
+
+const API_URL = "https://skillfactory-task.detmir.team";
+
 export const fetchOrders = async (limit: number, page: number) => {
   try {
-    const response = await fetch(`https://skillfactory-task.detmir.team/orders?limit=${limit}&page=${page}`, {
-      method: "GET",
-      credentials: "include",
+    const response = await axios.get(`${API_URL}/orders`, {
+      params: {
+        limit,
+        page,
+      },
+      withCredentials: true,
     });
-    if (!response.ok) {
-      throw new Error("Ошибка при получении заказов");
-    }
-    const orders = await response.json();
-    return orders;
+
+    return response.data;
   } catch (error) {
     console.error("Ошибка при выполнении запроса к API:", error);
     throw error;

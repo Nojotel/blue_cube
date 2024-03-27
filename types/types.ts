@@ -8,13 +8,7 @@ export interface Product {
   quantity?: number;
 }
 
-export interface OrderProduct {
-  id: string;
-  picture: string;
-  title: string;
-  description: string;
-  price: number;
-  rating: number;
+export interface OrderProduct extends Product {
   quantity: number;
 }
 
@@ -40,15 +34,11 @@ export interface OrdersState {
 
 export interface BasketState {
   isOpen: boolean;
-  items: Product[];
+  items: BasketItem[];
 }
 
-export interface BasketItem {
-  id: string;
-  title: string;
-  price: number;
+export interface BasketItem extends Omit<Product, "rating"> {
   quantity: number;
-  picture: string;
 }
 
 export interface BasketProps {
@@ -86,6 +76,15 @@ export interface ProductCardProps {
   setPage: (page: number) => void;
   page: number;
   hasHydrated: boolean;
+}
+
+export interface ProductDetailsResponse {
+  id: string;
+  picture: string;
+  title: string;
+  description: string;
+  price: number;
+  rating: number;
 }
 
 export interface QuantitySelectorProps {

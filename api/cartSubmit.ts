@@ -1,24 +1,14 @@
+import axios from "axios";
+
+const API_URL = "https://skillfactory-task.detmir.team";
+
 export const submitCart = async (basketItems: any[]) => {
   try {
-    const response = await fetch("https://skillfactory-task.detmir.team/cart/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(basketItems),
-      credentials: "include",
-    });
+    const response = await axios.post(`${API_URL}/cart/submit`, basketItems, { withCredentials: true });
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log("Успешный ответ от сервера:", data);
-    } else {
-      const errorData = await response.json();
-      console.error("Ошибка при оформлении заказа:", errorData);
-      throw new Error("Ошибка при оформлении заказа");
-    }
+    console.log("Успешный ответ от сервера:", response.data);
   } catch (error) {
-    console.error("Ошибка при отправке запроса:", error);
-    throw error;
+    console.error("Ошибка при оформлении заказа:", error);
+    throw new Error("Ошибка при оформлении заказа");
   }
 };
