@@ -9,7 +9,7 @@ import Image from "next/image";
 import Loading from "@/app/loading";
 import Pagination from "@/components/Pagination/Pagination";
 import BasketModal from "@/components/BasketModal/BasketModal";
-import { Product } from "@/redux/productReducer";
+import { Product } from "@/types/types"; // Импортируем интерфейс Product из types.ts
 import store from "@/redux/store";
 
 interface Order {

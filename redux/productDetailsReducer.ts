@@ -1,16 +1,9 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
-interface ProductDetails {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  rating: number;
-}
+import { ProductDetailsResponse } from "@/types/types";
 
 interface ProductDetailsState {
-  product: ProductDetails | null;
+  product: ProductDetailsResponse | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
@@ -34,7 +27,7 @@ const productDetailsSlice = createSlice({
     builder.addCase(fetchProductDetails.pending, (state) => {
       state.status = "loading";
     });
-    builder.addCase(fetchProductDetails.fulfilled, (state, action) => {
+    builder.addCase(fetchProductDetails.fulfilled, (state, action: PayloadAction<ProductDetailsResponse>) => {
       state.status = "succeeded";
       state.product = action.payload;
     });

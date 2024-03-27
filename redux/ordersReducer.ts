@@ -1,25 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  picture: string;
-  rating: number;
-  quantity: number;
-}
-
-interface Order {
-  id: number;
-  quantity: number;
-  createdAt: string;
-  products: Product[];
-}
-
-interface OrdersState {
-  orders: Order[];
-}
+import { Order, OrdersState } from "@/types/types";
 
 const initialState: OrdersState = {
   orders: [],

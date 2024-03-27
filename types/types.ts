@@ -1,9 +1,23 @@
-export interface BasketItem {
+export interface Product {
+  id: string;
+  picture: string;
+  title: string;
+  description: string;
+  price: number;
+  rating: number;
+  quantity?: number;
+}
+
+export interface ProductDetailsResponse extends Product {
   id: string;
   title: string;
+  description: string;
   price: number;
+  rating: number;
+}
+
+export interface OrderProduct extends Product {
   quantity: number;
-  picture: string;
 }
 
 export interface ProductState {
@@ -15,11 +29,18 @@ export interface ProductState {
   error: string | null;
 }
 
-export interface Product {
-  id: string;
-  title: string;
-  price: number;
+export interface Order {
+  id: number;
   quantity: number;
-  picture: string;
-  // дополнительные поля, если есть
+  createdAt: string;
+  products: OrderProduct[];
+}
+
+export interface OrdersState {
+  orders: Order[];
+}
+
+export interface BasketState {
+  isOpen: boolean;
+  items: Product[];
 }

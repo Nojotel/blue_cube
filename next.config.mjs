@@ -1,21 +1,19 @@
+import MillionLint from '@million/lint';
 const nextConfig = {
   images: {
-    domains: ["static.detmir.st"],
+    domains: ["static.detmir.st"]
   },
   async rewrites() {
-    return [
-      {
-        source: "/products/:id",
-        destination: "/products/:id",
-      },
-    ];
+    return [{
+      source: "/products/:id",
+      destination: "/products/:id"
+    }];
   },
-  webpack: (config) => {
+  webpack: config => {
     config.watchOptions = {
-      ignored: ["**/.git/**", "**/.next/**", "**/node_modules/**"],
+      ignored: ["**/.git/**", "**/.next/**", "**/node_modules/**"]
     };
     return config;
-  },
+  }
 };
-
-export default nextConfig;
+export default MillionLint.next()(nextConfig);
