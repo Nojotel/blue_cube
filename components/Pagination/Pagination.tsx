@@ -11,11 +11,13 @@ const Pagination: FC<PaginationProps> = ({ setPage, page, totalPages, storageKey
   const [isLeftClicked, setIsLeftClicked] = useState(false);
   const [isRightClicked, setIsRightClicked] = useState(false);
   const [visiblePages, setVisiblePages] = useState(5);
-  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem(storageKey, page.toString());
-  }, [page, storageKey]);
+    const savedPage = localStorage.getItem(storageKey);
+    if (savedPage) {
+      setPage(parseInt(savedPage));
+    }
+  }, [setPage, storageKey]);
 
   useEffect(() => {
     const updateVisiblePages = () => {
@@ -24,7 +26,6 @@ const Pagination: FC<PaginationProps> = ({ setPage, page, totalPages, storageKey
 
     window.addEventListener("resize", updateVisiblePages);
     updateVisiblePages();
-    setIsClient(true);
 
     return () => window.removeEventListener("resize", updateVisiblePages);
   }, []);
@@ -75,3 +76,8 @@ const Pagination: FC<PaginationProps> = ({ setPage, page, totalPages, storageKey
 };
 
 export default Pagination;
+//////
+
+///
+
+///

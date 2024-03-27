@@ -1,55 +1,21 @@
-import React, { useEffect, useState, Dispatch, SetStateAction, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ProductCard from "@/components/ProductCard/ProductCard";
 import Pagination from "@/components/Pagination/Pagination";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProducts } from "@/redux/productReducer";
-import { AppDispatch, RootState } from "@/redux/store";
+import type { AppDispatch } from "@/redux/store";
+import { RootState } from "@/redux/store";
 import styles from "./ProductList.module.css";
 import { PaginationProps } from "@/types/types";
 
-const selectProducts = (state: RootState) => state.product.products;
 const selectStatus = (state: RootState) => state.product.status;
-
-const useScrollPosition = (initialPage: number): [number, Dispatch<SetStateAction<number>>] => {
-  const [page, setPage] = useState(initialPage);
-  const isClient = typeof window !== "undefined";
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (isClient) {
-        window.scrollTo({ top: Number(localStorage.getItem("scrollPosition")) || 0, behavior: "smooth" });
-      }
-    };
-
-    const saveScrollPosition = () => {
-      if (isClient) {
-        localStorage.setItem("scrollPosition", window.pageYOffset.toString());
-      }
-    };
-
-    if (isClient) {
-      window.addEventListener("scroll", saveScrollPosition);
-      handleScroll();
-    }
-
-    return () => {
-      if (isClient) {
-        window.removeEventListener("scroll", saveScrollPosition);
-      }
-    };
-  }, [isClient]);
-
-  return [page, setPage];
-};
 
 const ProductList = () => {
   const [hasHydrated, setHasHydrated] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const initialPage = isClient ? Number(localStorage.getItem("productListPage")) || 1 : 1;
-  const [page, setPage] = useScrollPosition(initialPage);
+  const [page, setPage] = useState(1);
 
-  const dispatch = useDispatch<AppDispatch>();
-  const products = useSelector(selectProducts);
+  const dispatch: AppDispatch = useDispatch();
   const status = useSelector(selectStatus);
 
   const dispatchFetchProducts = useCallback(
@@ -69,6 +35,15 @@ const ProductList = () => {
       dispatchFetchProducts(page);
     }
   }, [hasHydrated, isClient, page, dispatchFetchProducts]);
+
+  useEffect(() => {
+    if (isClient) {
+      const savedPage = localStorage.getItem("productListPage");
+      if (savedPage) {
+        setPage(parseInt(savedPage));
+      }
+    }
+  }, [isClient]);
 
   useEffect(() => {
     if (isClient) {
