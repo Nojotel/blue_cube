@@ -5,7 +5,7 @@ import { Product, ProductState } from "@/types/types";
 const initialState: ProductState = {
   products: [],
   product: null,
-  page: 1,
+  page: typeof window !== "undefined" ? Number(localStorage.getItem("productListPage")) || 1 : 1,
   limit: 15,
   status: "idle",
   error: null,
@@ -25,6 +25,7 @@ const productSlice = createSlice({
     },
     setPage: (state, action: PayloadAction<number>) => {
       state.page = action.payload;
+      localStorage.setItem("productListPage", action.payload.toString());
     },
     setLimit: (state, action: PayloadAction<number>) => {
       state.limit = action.payload;

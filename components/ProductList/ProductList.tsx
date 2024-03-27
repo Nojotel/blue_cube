@@ -13,7 +13,7 @@ const selectStatus = (state: RootState) => state.product.status;
 const ProductList = () => {
   const [hasHydrated, setHasHydrated] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(typeof window !== "undefined" ? Number(localStorage.getItem("productListPage")) || 1 : 1);
 
   const dispatch: AppDispatch = useDispatch();
   const status = useSelector(selectStatus);
@@ -35,15 +35,6 @@ const ProductList = () => {
       dispatchFetchProducts(page);
     }
   }, [hasHydrated, isClient, page, dispatchFetchProducts]);
-
-  useEffect(() => {
-    if (isClient) {
-      const savedPage = localStorage.getItem("productListPage");
-      if (savedPage) {
-        setPage(parseInt(savedPage));
-      }
-    }
-  }, [isClient]);
 
   useEffect(() => {
     if (isClient) {

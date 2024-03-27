@@ -76,8 +76,3 @@ const Pagination: FC<PaginationProps> = ({ setPage, page, totalPages, storageKey
 };
 
 export default Pagination;
-//////
-
-///
-
-///
