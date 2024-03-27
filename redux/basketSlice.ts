@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Product, BasketState } from "@/types/types";
+import { Product, BasketState, BasketItem } from "@/types/types";
 
 const initialState: BasketState = {
   isOpen: false,
@@ -17,7 +17,12 @@ export const basketSlice = createSlice({
       state.isOpen = action.payload;
     },
     addToBasket: (state, action: PayloadAction<Product[]>) => {
-      state.items.push(...action.payload);
+      state.items.push(
+        ...action.payload.map((product) => ({
+          ...product,
+          quantity: 1,
+        }))
+      );
     },
     removeFromBasket: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
