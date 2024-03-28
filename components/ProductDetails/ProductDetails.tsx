@@ -7,17 +7,15 @@ import Loading from "@/app/loading";
 import NotFound from "@/app/loading";
 import { fetchProductDetails } from "@/redux/productDetailsReducer";
 import { addToBasket, incrementQuantity, decrementQuantity, getQuantityInBasket, removeFromBasket } from "@/redux/basketReducer";
-import { GenerateStars } from "@/components/ProductCard/generateStars";
+import GenerateStars from "@/components/ProductCard/generateStars";
 import styles from "./ProductDetails.module.css";
 import { AppDispatch, RootState } from "@/redux/store";
-import { Product } from "@/redux/productReducer";
+import { Product, ModalProps, MAX_TOTAL_COST, TITLE_MAX_LENGTH } from "@/types/types";
 import { setBasketOpen } from "@/redux/basketSlice";
 import QuantitySelector from "@/components/QuantitySelector/QuantitySelector";
 import Modal from "@/components/Modal/Modal";
-import store from "@/redux/store";
 import { updateBasketOnServer } from "@/api/cartUpdate";
-
-const MAX_TOTAL_COST = 10000;
+import { trimTextToWholeWords } from "@/components/Basket/TrimText";
 
 const ProductDetails: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,13 +27,12 @@ const ProductDetails: React.FC = () => {
   const [showQuantityButtons, setShowQuantityButtons] = useState(quantityInBasket > 0);
   const [showModal, setShowModal] = useState(false);
 
-  const getTotalPriceInBasket = (state: RootState) => {
-    return state.basket.items.reduce((total, item) => total + item.price * item.quantity, 0);
-  };
+  const totalCostSelector = (state: RootState) => state.basket.items.reduce((total, item) => total + item.price * item.quantity, 0);
+  const getTotalPriceInBasket = useSelector(totalCostSelector);
 
   const handleAddToCartClick = () => {
     if (product) {
-      const totalCost = getTotalPriceInBasket(store.getState()) + product.price;
+      const totalCost = getTotalPriceInBasket + product.price;
       if (totalCost > MAX_TOTAL_COST) {
         setShowModal(true);
         return;
@@ -48,7 +45,7 @@ const ProductDetails: React.FC = () => {
 
   const handleQuantityChange = (increment: boolean) => {
     if (product) {
-      const totalCost = getTotalPriceInBasket(store.getState()) + (increment ? product.price : -product.price);
+      const totalCost = getTotalPriceInBasket + (increment ? product.price : -product.price);
       if (totalCost > MAX_TOTAL_COST || (increment && quantityInBasket >= 10)) {
         setShowModal(true);
         return;
@@ -98,7 +95,7 @@ const ProductDetails: React.FC = () => {
       <div className={styles.container}>
         <Image className={styles.image} src={product.picture} alt={product.title} width={374} height={374} priority />
         <div className={styles.information}>
-          <h2 className={styles.title}>{product.title}</h2>
+          <h2 className={styles.title}>{trimTextToWholeWords(product.title, TITLE_MAX_LENGTH)}</h2>
           <p className={styles.rating}>
             <GenerateStars rating={product.rating} />
           </p>

@@ -1,27 +1,27 @@
+import axios from "axios";
 import { Dispatch } from "redux";
 import { updateBasket } from "../redux/basketReducer";
+import { BasketItem, Product } from "@/types/types";
+
+const API_URL = "https://skillfactory-task.detmir.team";
+
+interface CartItem {
+  product: Product;
+  quantity: number;
+}
 
 export const fetchCartData = async (dispatch: Dispatch) => {
   try {
-    const response = await fetch("https://skillfactory-task.detmir.team/cart", {
-      method: "GET",
-      credentials: "include",
+    const response = await axios.get<CartItem[]>(`${API_URL}/cart`, {
+      withCredentials: true,
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      const items = data.map(({ product: { id, title, price, picture }, quantity }: { product: { id: string; title: string; price: number; picture: string }; quantity: number }) => ({
-        id,
-        title,
-        price,
-        quantity,
-        picture,
-      }));
-      dispatch(updateBasket(items));
-    } else {
-      const errorData = await response.json();
-      console.error("Ошибка при получении данных корзины:", errorData);
-    }
+    const items: BasketItem[] = response.data.map(({ product, quantity }) => ({
+      ...product,
+      quantity,
+    }));
+
+    dispatch(updateBasket(items));
   } catch (error) {
     console.error("Ошибка при получении данных корзины:", error);
   }

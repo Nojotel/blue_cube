@@ -1,35 +1,35 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Modal.module.css";
-
-interface ModalProps {
-  message: string;
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { ModalProps } from "@/types/types";
 
 const Modal: React.FC<ModalProps> = ({ message, isOpen, onClose }) => {
-  const [showModal, setShowModal] = useState(isOpen);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
+
     if (isOpen) {
       setShowModal(true);
       timeout = setTimeout(() => {
-        setShowModal(false);
         onClose();
       }, 2000);
+    } else {
+      setShowModal(false);
     }
+
     return () => clearTimeout(timeout);
   }, [isOpen, onClose]);
 
-  if (!showModal) return null;
-
   return (
-    <div className={styles.modal}>
-      <div className={styles.modalContent}>
-        <span className={styles.modalMessage}>{message}</span>
-      </div>
-    </div>
+    <>
+      {showModal && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <span className={styles.modalMessage}>{message}</span>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

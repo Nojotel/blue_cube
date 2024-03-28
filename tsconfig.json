@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/client/Pagination.jsx", "components/AddToCartButton", "pages/products/[id].jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/client/Pagination.jsx", "components/AddToCartButton", "pages/products/[id].jsx", "app/page.js", "pages/404.js"],
   "exclude": ["node_modules"]
 }
