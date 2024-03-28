@@ -44,6 +44,11 @@
   font-weight: 700;
   line-height: 24px;
   text-align: right;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
 }
 
 .subPrice {
@@ -136,9 +141,10 @@
   }
 
   .price {
-    padding-top: 15px;
+    padding-top: 10px;
     text-align: center;
     font-size: 28px;
+    align-items: center;
   }
 
   .subPrice {

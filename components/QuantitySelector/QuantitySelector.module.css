@@ -134,3 +134,9 @@
     width: auto;
   }
 }
+@media (hover: none) {
+  .buttonMinus:hover,
+  .buttonPlus:hover {
+    background-color: #e6f1fc;
+  }
+}
