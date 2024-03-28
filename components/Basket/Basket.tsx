@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styles from "./Basket.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -19,10 +19,20 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
   const [showModal, setShowModal] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchCartData(dispatch);
-  }, [dispatch]);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        onToggle(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dispatch, onToggle]);
 
   const handleQuantityChange = (productId: string, increment: boolean, isFromModal = false) => {
     const item = basketItems.find((item) => item.id === productId);
@@ -71,7 +81,7 @@ const Basket: React.FC<BasketProps> = ({ isOpen, onToggle, children }) => {
     <div onClick={() => onToggle(!isOpen)}>
       {children}
       {isOpen && (
-        <div className={styles.container} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.container} ref={containerRef}>
           <div onClick={(e) => e.stopPropagation()}>
             {basketItems.length > 0 ? (
               basketItems.map((item) => (
