@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Проект "Синий куб"
 
-## Getting Started
+![Пример интерфейса проекта Синий куб](./public/screen.png)
 
-First, run the development server:
+Этот проект является интернет-магазином, разработанным с использованием Next.js. Он позволяет просматривать товары, добавлять их в корзину и оформлять заказы.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Описание проекта
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Проект Синий куб предоставляет следующие функции:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Листинг товаров с описанием и ценой.
+- Добавление товаров в корзину и оформление заказа.
+- Отображение страницы заказов для отслеживания статуса заказа.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Структура проекта
 
-## Learn More
+Проект использует следующие технологии и инструменты:
 
-To learn more about Next.js, take a look at the following resources:
+- Frontend: Next.js, React, Redux Toolkit.
+- Стилизация: CSS3 с препроцессором Sass.
+- Взаимодействие с API: Axios для работы с сервером.
+- Управление состоянием: Redux Toolkit для хранения данных о товарах и заказах.
+- Оптимизация производительности: SSR и SSG для улучшения загрузки страниц.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Установка и запуск проекта
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Чтобы установить и запустить проект локально, выполните следующие шаги:
 
-## Deploy on Vercel
+1. Клонируйте репозиторий на свой компьютер.
+2. Установите зависимости с помощью команды `npm install` или `yarn install`.
+3. Запустите разработческий сервер с помощью команды `npm run dev` или `yarn dev`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Откройте [http://localhost:3000](http://localhost:3000) в браузере, чтобы увидеть результат.
