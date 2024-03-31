@@ -14,7 +14,11 @@
   border-radius: 10px;
   cursor: pointer;
 }
-
+.container:hover {
+  border-radius: 16px;
+  box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.15);
+  background: rgb(255, 255, 255);
+}
 .image {
   width: 240px;
   height: 240px;
